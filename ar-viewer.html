@@ -76,7 +76,7 @@ padding:15px;
 
 border-radius:12px;
 
-width:260px;
+width:280px;
 
 color:white;
 
@@ -104,6 +104,42 @@ z-index:999;
 
 }
 
+.caracteristicas{
+
+position:absolute;
+
+top:220px;
+right:20px;
+
+background:rgba(0,0,0,.85);
+
+padding:15px;
+
+border-radius:12px;
+
+width:280px;
+
+color:white;
+
+z-index:999;
+
+max-height:350px;
+
+overflow:auto;
+
+}
+
+.item{
+
+padding:8px;
+margin-bottom:8px;
+
+background:#1f2937;
+
+border-radius:8px;
+
+}
+
 input{
 width:100%;
 }
@@ -118,13 +154,17 @@ width:100%;
 
 <a href="/viewer.html"
 class="btn">
+
 ← Voltar
+
 </a>
 
 <button
 class="btn"
 onclick="abrirCamera()">
+
 📷 Abrir Câmera
+
 </button>
 
 </div>
@@ -147,8 +187,19 @@ shadow-intensity="1">
 <h3>Peça Selecionada</h3>
 
 <p id="pnAtual">
+
 Carregando...
+
 </p>
+
+</div>
+
+<div class="caracteristicas">
+
+<h3>Características Críticas</h3>
+
+<div id="listaCaracteristicas">
+</div>
 
 </div>
 
@@ -157,28 +208,36 @@ Carregando...
 <h3>Alinhamento</h3>
 
 <label>X</label>
-<input id="x"
+
+<input
+id="x"
 type="range"
 min="-800"
 max="800"
 value="0">
 
 <label>Y</label>
-<input id="y"
+
+<input
+id="y"
 type="range"
 min="-600"
 max="600"
 value="0">
 
 <label>Transparência</label>
-<input id="opacity"
+
+<input
+id="opacity"
 type="range"
 min="10"
 max="100"
 value="75">
 
 <label>Zoom</label>
-<input id="zoom"
+
+<input
+id="zoom"
 type="range"
 min="50"
 max="250"
@@ -206,12 +265,45 @@ modeloSelecionado;
 
 if(pnSelecionado){
 
-document.getElementById(
-"pnAtual"
-).innerHTML =
+document
+.getElementById("pnAtual")
+.innerHTML =
 pnSelecionado;
 
 }
+
+const caracteristicas =
+JSON.parse(
+localStorage.getItem("caracteristicas")
+|| "[]"
+);
+
+const lista =
+document.getElementById(
+"listaCaracteristicas"
+);
+
+caracteristicas
+.filter(item=>item.pn===pnSelecionado)
+.forEach(item=>{
+
+lista.innerHTML += `
+
+<div class="item">
+
+☐ ${item.caracteristica}
+
+<br>
+
+<small>
+${item.tipo}
+</small>
+
+</div>
+
+`;
+
+});
 
 function atualizar(){
 
@@ -231,60 +323,4 @@ modelo.style.left =
 `calc(50% + ${x}px)`;
 
 modelo.style.top =
-`calc(50% + ${y}px)`;
-
-modelo.style.opacity =
-opacity / 100;
-
-modelo.style.transform =
-`translate(-50%,-50%) scale(${zoom/100})`;
-
-}
-
-document.getElementById("x")
-.addEventListener("input", atualizar);
-
-document.getElementById("y")
-.addEventListener("input", atualizar);
-
-document.getElementById("opacity")
-.addEventListener("input", atualizar);
-
-document.getElementById("zoom")
-.addEventListener("input", atualizar);
-
-async function abrirCamera(){
-
-const video =
-document.getElementById("camera");
-
-try{
-
-const stream =
-await navigator.mediaDevices.getUserMedia({
-video:{
-facingMode:"environment"
-}
-});
-
-video.srcObject =
-stream;
-
-video.style.display =
-"block";
-
-}catch(e){
-
-alert(
-"Erro ao abrir câmera"
-);
-
-}
-
-}
-
-</script>
-
-</body>
-
-</html>
+`calc(50%
