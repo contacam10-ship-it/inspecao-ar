@@ -4,7 +4,6 @@
 <head>
 
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
 
 <title>InspectAR AR</title>
 
@@ -14,143 +13,29 @@ src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js">
 
 <style>
 
-*{
-box-sizing:border-box;
-font-family:Arial,sans-serif;
-}
-
 body{
 margin:0;
-background:#0b1736;
+background:#0f172a;
 color:white;
-overflow:hidden;
-}
-
-.header{
-position:absolute;
-top:10px;
-left:10px;
-display:flex;
-gap:10px;
-z-index:1000;
-}
-
-.btn{
-background:#2563eb;
-color:white;
-padding:12px 18px;
-border:none;
-border-radius:8px;
-cursor:pointer;
-text-decoration:none;
-font-weight:bold;
-}
-
-video{
-position:absolute;
-top:0;
-left:0;
-width:100%;
-height:100%;
-object-fit:cover;
-display:none;
-z-index:1;
-}
-
-model-viewer{
-position:absolute;
-top:50%;
-left:50%;
-width:900px;
-height:650px;
-transform:translate(-50%,-50%);
-background:transparent;
-opacity:0.75;
-z-index:2;
+font-family:Arial;
 }
 
 .info{
-
-position:absolute;
-top:20px;
-right:20px;
-
-width:300px;
-
-background:rgba(0,0,0,0.85);
-
-padding:15px;
-
-border-radius:12px;
-
-z-index:1000;
-
+padding:20px;
+background:#111827;
 }
 
-.caracteristicas{
-
-position:absolute;
-top:190px;
-right:20px;
-
-width:300px;
-
-background:rgba(0,0,0,0.85);
-
-padding:15px;
-
-border-radius:12px;
-
-z-index:1000;
-
-max-height:400px;
-
-overflow:auto;
-
+model-viewer{
+width:100%;
+height:500px;
+background:#374151;
 }
 
 .item{
-
-padding:10px;
-
-margin-bottom:8px;
-
 background:#1f2937;
-
+padding:10px;
+margin:10px;
 border-radius:8px;
-
-}
-
-.painel{
-
-position:absolute;
-bottom:20px;
-left:20px;
-
-width:350px;
-
-background:rgba(0,0,0,0.85);
-
-padding:15px;
-
-border-radius:12px;
-
-z-index:1000;
-
-}
-
-input{
-width:100%;
-}
-
-.status-ok{
-color:#22c55e;
-font-weight:bold;
-}
-
-.status-erro{
-color:#ef4444;
-font-weight:bold;
 }
 
 </style>
@@ -159,62 +44,83 @@ font-weight:bold;
 
 <body>
 
-<div class="header">
+<div class="info">
 
-<a href="/viewer.html" class="btn">
-← Voltar
-</a>
-
-<button
-class="btn"
-onclick="abrirCamera()">
-📷 Abrir Câmera
-</button>
+<h2>
+PN:
+<span id="pnAtual">
+Carregando...
+</span>
+</h2>
 
 </div>
-
-<video
-id="camera"
-autoplay
-playsinline>
-</video>
 
 <model-viewer
 id="modelo"
 camera-controls
-auto-rotate
-shadow-intensity="1">
+auto-rotate>
 </model-viewer>
 
-<div class="info">
-
-<h3>Peça Selecionada</h3>
-
-<p id="pnAtual">
--
-</p>
-
-<p id="statusModelo">
-Aguardando
-</p>
-
+<div
+id="caracteristicas">
 </div>
 
-<div class="caracteristicas">
+<script>
 
-<h3>Características Críticas</h3>
+const pn =
+sessionStorage.getItem(
+"pnSelecionado"
+);
 
-<div id="listaCaracteristicas">
+const modelo =
+sessionStorage.getItem(
+"modeloSelecionado"
+);
 
-Nenhuma característica encontrada.
+document.getElementById(
+"pnAtual"
+).innerText =
+pn || "Não encontrado";
+
+if(modelo){
+
+document.getElementById(
+"modelo"
+).src =
+modelo;
+
+}
+
+const caracteristicas =
+JSON.parse(
+localStorage.getItem(
+"caracteristicas"
+) || "[]"
+);
+
+const area =
+document.getElementById(
+"caracteristicas"
+);
+
+caracteristicas
+.filter(c => c.pn === pn)
+.forEach(c => {
+
+area.innerHTML += `
+<div class="item">
+
+${c.caracteristica}
+<br>
+${c.tipo}
 
 </div>
+`;
 
-</div>
+});
 
-<div class="painel">
+</script>
 
-<h3>Alinhamento</h3>
+</body>
 
-<label>X</label>
-<input id="x" type="
+</html>
