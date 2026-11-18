@@ -6,7 +6,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
-<title>InspectAR AR</title>
+<title>InspectAR - Ambiente de Inspeção AR</title>
 
 <script type="module"
 src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js">
@@ -14,54 +14,131 @@ src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js">
 
 <style>
 
-body{
+*{
 margin:0;
-background:#0f172a;
-color:white;
+padding:0;
+box-sizing:border-box;
 font-family:Arial,sans-serif;
 }
 
+body{
+background:#0f172a;
+color:white;
+overflow:hidden;
+}
+
 .header{
-padding:15px;
 background:#111827;
+padding:15px;
 display:flex;
 gap:10px;
+align-items:center;
 }
 
 .btn{
 background:#2563eb;
 color:white;
 padding:12px 18px;
+border:none;
 border-radius:8px;
+cursor:pointer;
 text-decoration:none;
 font-weight:bold;
+}
+
+.camera-btn{
+background:#16a34a;
 }
 
 .layout{
 display:grid;
 grid-template-columns:1fr 320px;
-gap:20px;
-padding:20px;
+height:calc(100vh - 70px);
+gap:15px;
+padding:15px;
 }
 
-.card{
+.viewer-container{
+position:relative;
 background:#1f2937;
-padding:15px;
 border-radius:12px;
+overflow:hidden;
+}
+
+video{
+position:absolute;
+top:0;
+left:0;
+width:100%;
+height:100%;
+object-fit:cover;
+display:none;
+z-index:1;
 }
 
 model-viewer{
-width:100%;
-height:600px;
-background:#374151;
-border-radius:12px;
+position:absolute;
+top:50%;
+left:50%;
+width:900px;
+height:650px;
+transform:translate(-50%,-50%);
+background:transparent;
+opacity:0.8;
+z-index:2;
 }
 
-.item{
+.sidebar{
+background:#1f2937;
+border-radius:12px;
+padding:15px;
+overflow:auto;
+}
+
+.info-box{
+background:#374151;
+padding:12px;
+border-radius:8px;
+margin-bottom:15px;
+}
+
+.lista-caracteristicas{
+margin-top:10px;
+}
+
+.caracteristica{
 background:#374151;
 padding:10px;
 border-radius:8px;
 margin-bottom:8px;
+cursor:pointer;
+}
+
+.caracteristica:hover{
+background:#4b5563;
+}
+
+.detalhes{
+background:#111827;
+padding:12px;
+border-radius:8px;
+margin-top:15px;
+min-height:150px;
+}
+
+label{
+display:block;
+margin-top:12px;
+margin-bottom:5px;
+}
+
+input[type=range]{
+width:100%;
+}
+
+.status{
+color:#22c55e;
+font-weight:bold;
 }
 
 </style>
@@ -72,42 +149,127 @@ margin-bottom:8px;
 
 <div class="header">
 
-<a href="/viewer.html" class="btn">
+<a
+href="/viewer.html"
+class="btn">
+
 ← Voltar
+
 </a>
+
+<button
+class="btn camera-btn"
+onclick="abrirCamera()">
+
+📷 Abrir Câmera
+
+</button>
 
 </div>
 
 <div class="layout">
 
-<div class="card">
+<div class="viewer-container">
 
-<h2>
-Inspeção AR
-</h2>
-
-<p>
-PN:
-<span id="pnAtual">
--
-</span>
-</p>
+<video
+id="camera"
+autoplay
+playsinline>
+</video>
 
 <model-viewer
 id="modelo"
 camera-controls
-auto-rotate>
+auto-rotate
+shadow-intensity="1">
 </model-viewer>
 
 </div>
 
-<div class="card">
+<div class="sidebar">
+
+<div class="info-box">
+
+<h3>Peça Selecionada</h3>
+
+<br>
+
+<p>
+<b>PN:</b>
+<span id="pnAtual">-</span>
+</p>
+
+<br>
+
+<p class="status">
+Ambiente AR Ativo
+</p>
+
+</div>
+
+<div class="info-box">
 
 <h3>Características Críticas</h3>
 
-<div id="listaCaracteristicas">
+<div
+id="listaCaracteristicas"
+class="lista-caracteristicas">
 
-Nenhuma característica.
+Nenhuma característica cadastrada.
+
+</div>
+
+</div>
+
+<div class="detalhes">
+
+<h3>Detalhes</h3>
+
+<br>
+
+<div id="detalhesCaracteristica">
+
+Selecione uma característica.
+
+</div>
+
+</div>
+
+<div class="info-box">
+
+<h3>Alinhamento CAD</h3>
+
+<label>Posição X</label>
+<input
+id="x"
+type="range"
+min="-800"
+max="800"
+value="0">
+
+<label>Posição Y</label>
+<input
+id="y"
+type="range"
+min="-600"
+max="600"
+value="0">
+
+<label>Escala</label>
+<input
+id="zoom"
+type="range"
+min="50"
+max="250"
+value="100">
+
+<label>Transparência</label>
+<input
+id="opacity"
+type="range"
+min="10"
+max="100"
+value="80">
 
 </div>
 
@@ -131,13 +293,16 @@ params.get("arquivo");
 document.getElementById(
 "pnAtual"
 ).innerHTML =
-pn || "PN não informado";
+pn || "Não informado";
+
+const modelo =
+document.getElementById(
+"modelo"
+);
 
 if(arquivo){
 
-document.getElementById(
-"modelo"
-).src =
+modelo.src =
 "/modelos/" + arquivo;
 
 }
@@ -149,44 +314,174 @@ localStorage.getItem(
 ) || "[]"
 );
 
-const area =
+const lista =
 document.getElementById(
 "listaCaracteristicas"
 );
 
-area.innerHTML = "";
+const detalhes =
+document.getElementById(
+"detalhesCaracteristica"
+);
+
+lista.innerHTML = "";
 
 const filtradas =
-caracteristicas.filter(function(c){
-
-return c.pn === pn;
-
-});
+caracteristicas.filter(
+item => item.pn === pn
+);
 
 if(filtradas.length === 0){
 
-area.innerHTML =
+lista.innerHTML =
 "Sem características cadastradas.";
 
 }
 
-filtradas.forEach(function(item){
+filtradas.forEach(item=>{
 
-area.innerHTML += `
+const div =
+document.createElement("div");
 
-<div class="item">
+div.className =
+"caracteristica";
 
-<b>${item.caracteristica}</b>
+div.innerHTML =
+item.caracteristica;
+
+div.onclick = function(){
+
+detalhes.innerHTML = `
+
+<b>Característica:</b>
+<br>
+${item.caracteristica}
+
+<br><br>
+
+<b>Tipo:</b>
+<br>
+${item.tipo || "-"}
+
+<br><br>
+
+<b>X:</b>
+${item.posx || "0"}
 
 <br>
 
-${item.tipo}
+<b>Y:</b>
+${item.posy || "0"}
 
-</div>
+<br><br>
+
+<b>Tolerância:</b>
+±${item.tolerancia || "-"}
+
+<br><br>
+
+<b>Critério:</b>
+<br>
+${item.criterio || "-"}
 
 `;
 
+};
+
+lista.appendChild(div);
+
 });
+
+async function abrirCamera(){
+
+const video =
+document.getElementById(
+"camera"
+);
+
+try{
+
+const stream =
+await navigator.mediaDevices.getUserMedia({
+
+video:{
+facingMode:"environment"
+}
+
+});
+
+video.srcObject =
+stream;
+
+video.style.display =
+"block";
+
+}
+catch(e){
+
+alert(
+"Não foi possível abrir a câmera."
+);
+
+}
+
+}
+
+function atualizarModelo(){
+
+const x =
+document.getElementById("x").value;
+
+const y =
+document.getElementById("y").value;
+
+const zoom =
+document.getElementById("zoom").value;
+
+const opacity =
+document.getElementById("opacity").value;
+
+modelo.style.left =
+`calc(50% + ${x}px)`;
+
+modelo.style.top =
+`calc(50% + ${y}px)`;
+
+modelo.style.opacity =
+opacity / 100;
+
+modelo.style.transform =
+`translate(-50%,-50%) scale(${zoom/100})`;
+
+}
+
+document
+.getElementById("x")
+.addEventListener(
+"input",
+atualizarModelo
+);
+
+document
+.getElementById("y")
+.addEventListener(
+"input",
+atualizarModelo
+);
+
+document
+.getElementById("zoom")
+.addEventListener(
+"input",
+atualizarModelo
+);
+
+document
+.getElementById("opacity")
+.addEventListener(
+"input",
+atualizarModelo
+);
 
 </script>
 
