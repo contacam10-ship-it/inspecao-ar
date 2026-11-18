@@ -6,35 +6,38 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
-<title>Características de Inspeção</title>
+<title>InspectAR - Características</title>
 
 <style>
 
-body{
+*{
 margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial,sans-serif;
+}
+
+body{
 background:#0f172a;
 color:white;
-font-family:Arial,sans-serif;
 }
 
 .header{
 background:#111827;
-padding:15px;
+padding:20px;
 }
 
 .btn{
 background:#2563eb;
 color:white;
 padding:12px 18px;
-border:none;
 border-radius:8px;
 text-decoration:none;
 font-weight:bold;
-cursor:pointer;
 }
 
 .container{
-max-width:1000px;
+max-width:1200px;
 margin:auto;
 padding:20px;
 }
@@ -46,30 +49,52 @@ border-radius:12px;
 margin-bottom:20px;
 }
 
-input,select{
+label{
+display:block;
+margin-top:15px;
+margin-bottom:5px;
+}
+
+input,
+select{
 width:100%;
 padding:12px;
-margin-top:8px;
-margin-bottom:15px;
 border:none;
 border-radius:8px;
 }
 
 .salvar{
+margin-top:20px;
 background:#16a34a;
 color:white;
-padding:12px 18px;
 border:none;
+padding:12px 20px;
 border-radius:8px;
-font-size:16px;
 cursor:pointer;
+font-weight:bold;
 }
 
 .item{
 background:#374151;
-padding:12px;
+padding:15px;
 border-radius:8px;
 margin-bottom:10px;
+}
+
+.excluir{
+margin-top:10px;
+background:#dc2626;
+color:white;
+border:none;
+padding:10px 15px;
+border-radius:8px;
+cursor:pointer;
+}
+
+.info{
+color:#cbd5e1;
+font-weight:bold;
+margin-bottom:15px;
 }
 
 </style>
@@ -109,7 +134,9 @@ placeholder="Furo Principal">
 <select id="tipo">
 
 <option>FURO</option>
+
 <option>COMPONENTE</option>
+
 <option>DIMENSAO</option>
 
 </select>
@@ -128,7 +155,13 @@ Salvar Característica
 
 <h2>Características Cadastradas</h2>
 
-<div id="lista"></div>
+<div
+id="total"
+class="info">
+</div>
+
+<div id="lista">
+</div>
 
 </div>
 
@@ -138,29 +171,51 @@ Salvar Característica
 
 function carregarCaracteristicas(){
 
-const lista =
+const caracteristicas =
 JSON.parse(
-localStorage.getItem("caracteristicas") || "[]"
+localStorage.getItem("caracteristicas")
+|| "[]"
 );
 
-const area =
+document.getElementById("total")
+.innerHTML =
+"Total de características: " +
+caracteristicas.length;
+
+const lista =
 document.getElementById("lista");
 
-area.innerHTML = "";
+lista.innerHTML = "";
 
-lista.forEach(item=>{
+caracteristicas.forEach(
+function(item,index){
 
-area.innerHTML += `
+lista.innerHTML += `
 
 <div class="item">
 
-<b>PN:</b> ${item.pn}<br>
+<b>PN:</b>
+${item.pn}
+
+<br><br>
 
 <b>Característica:</b>
-${item.caracteristica}<br>
+${item.caracteristica}
+
+<br><br>
 
 <b>Tipo:</b>
 ${item.tipo}
+
+<br>
+
+<button
+class="excluir"
+onclick="excluirCaracteristica(${index})">
+
+🗑 Excluir
+
+</button>
 
 </div>
 
@@ -173,38 +228,44 @@ ${item.tipo}
 function salvarCaracteristica(){
 
 const pn =
-document.getElementById("pn").value;
+document.getElementById("pn")
+.value.trim();
 
 const caracteristica =
-document.getElementById("caracteristica").value;
+document.getElementById("caracteristica")
+.value.trim();
 
 const tipo =
-document.getElementById("tipo").value;
+document.getElementById("tipo")
+.value;
 
 if(!pn || !caracteristica){
 
-alert("Preencha todos os campos");
+alert(
+"Preencha todos os campos."
+);
 
 return;
 
 }
 
-const lista =
+const caracteristicas =
 JSON.parse(
-localStorage.getItem("caracteristicas") || "[]"
+localStorage.getItem("caracteristicas")
+|| "[]"
 );
 
-lista.push({
+caracteristicas.push({
 
-pn,
-caracteristica,
-tipo
+pn: pn,
+caracteristica: caracteristica,
+tipo: tipo
 
 });
 
 localStorage.setItem(
 "caracteristicas",
-JSON.stringify(lista)
+JSON.stringify(caracteristicas)
 );
 
 document.getElementById("pn").value = "";
@@ -212,7 +273,34 @@ document.getElementById("caracteristica").value = "";
 
 carregarCaracteristicas();
 
-alert("Característica salva");
+alert(
+"Característica salva."
+);
+
+}
+
+function excluirCaracteristica(index){
+
+if(!confirm(
+"Deseja excluir esta característica?"
+)){
+return;
+}
+
+const caracteristicas =
+JSON.parse(
+localStorage.getItem("caracteristicas")
+|| "[]"
+);
+
+caracteristicas.splice(index,1);
+
+localStorage.setItem(
+"caracteristicas",
+JSON.stringify(caracteristicas)
+);
+
+carregarCaracteristicas();
 
 }
 
