@@ -17,12 +17,24 @@ body{
 margin:0;
 background:#0f172a;
 color:white;
-font-family:Arial;
+font-family:Arial,sans-serif;
+}
+
+.topo{
+background:#111827;
+padding:15px;
+}
+
+.btn{
+background:#2563eb;
+color:white;
+padding:12px 18px;
+text-decoration:none;
+border-radius:8px;
 }
 
 .info{
 padding:20px;
-background:#111827;
 }
 
 model-viewer{
@@ -31,10 +43,10 @@ height:500px;
 background:#374151;
 }
 
-.item{
+.card{
 background:#1f2937;
-padding:10px;
 margin:10px;
+padding:12px;
 border-radius:8px;
 }
 
@@ -44,13 +56,27 @@ border-radius:8px;
 
 <body>
 
+<div class="topo">
+
+<a
+href="/viewer.html"
+class="btn">
+
+← Voltar
+
+</a>
+
+</div>
+
 <div class="info">
 
 <h2>
+
 PN:
 <span id="pnAtual">
-Carregando...
+-
 </span>
+
 </h2>
 
 </div>
@@ -61,26 +87,25 @@ camera-controls
 auto-rotate>
 </model-viewer>
 
-<div
-id="caracteristicas">
+<div id="caracteristicas">
 </div>
 
 <script>
 
 const pn =
-sessionStorage.getItem(
+localStorage.getItem(
 "pnSelecionado"
 );
 
 const modelo =
-sessionStorage.getItem(
+localStorage.getItem(
 "modeloSelecionado"
 );
 
 document.getElementById(
 "pnAtual"
-).innerText =
-pn || "Não encontrado";
+).innerHTML =
+pn || "PN não encontrado";
 
 if(modelo){
 
@@ -103,16 +128,28 @@ document.getElementById(
 "caracteristicas"
 );
 
-caracteristicas
-.filter(c => c.pn === pn)
-.forEach(c => {
+const filtradas =
+caracteristicas.filter(function(c){
+
+return c.pn == pn;
+
+});
+
+if(filtradas.length === 0){
+
+area.innerHTML =
+"<div class='card'>Nenhuma característica encontrada.</div>";
+
+}
+
+filtradas.forEach(function(item){
 
 area.innerHTML += `
-<div class="item">
+<div class="card">
 
-${c.caracteristica}
+<b>${item.caracteristica}</b>
 <br>
-${c.tipo}
+${item.tipo}
 
 </div>
 `;
