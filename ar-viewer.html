@@ -44,6 +44,10 @@ text-decoration:none;
 font-weight:bold;
 }
 
+.btn-save{
+background:#16a34a;
+}
+
 video{
 position:absolute;
 top:0;
@@ -68,28 +72,19 @@ z-index:2;
 }
 
 .painel{
-
 position:absolute;
 bottom:20px;
 left:20px;
-
 background:rgba(0,0,0,.85);
-
 padding:15px;
-
 border-radius:12px;
-
 width:320px;
-
 z-index:999;
-
 color:white;
-
 }
 
 .painel h3{
 margin-top:0;
-margin-bottom:15px;
 }
 
 label{
@@ -103,28 +98,21 @@ width:100%;
 }
 
 .info{
-
 position:absolute;
-
 top:20px;
 right:20px;
-
 background:rgba(0,0,0,.85);
-
 padding:15px;
-
 border-radius:12px;
-
 width:260px;
-
 z-index:999;
-
 color:white;
-
 }
 
-.info h3{
-margin-top:0;
+.status{
+margin-top:10px;
+font-weight:bold;
+color:#22c55e;
 }
 
 </style>
@@ -143,6 +131,12 @@ margin-top:0;
 class="btn"
 onclick="abrirCamera()">
 📷 Abrir Câmera
+</button>
+
+<button
+class="btn btn-save"
+onclick="salvarConfiguracao()">
+💾 Salvar
 </button>
 
 </div>
@@ -168,15 +162,13 @@ exposure="1.2">
 
 <p><b>86699800_prt</b></p>
 
-<p>
-Modo:
-<br>
-Overlay CAD
-</p>
+<p>Modo: Overlay CAD</p>
 
-<p style="color:#22c55e;">
-✅ Modelo carregado
-</p>
+<div
+class="status"
+id="status">
+Configuração carregada
+</div>
 
 </div>
 
@@ -223,83 +215,32 @@ value="100">
 const modelo =
 document.getElementById("modelo");
 
-document
-.getElementById("x")
-.addEventListener("input", atualizar);
+const sliderX =
+document.getElementById("x");
 
-document
-.getElementById("y")
-.addEventListener("input", atualizar);
+const sliderY =
+document.getElementById("y");
 
-document
-.getElementById("opacity")
-.addEventListener("input", atualizar);
+const sliderOpacity =
+document.getElementById("opacity");
 
-document
-.getElementById("zoom")
-.addEventListener("input", atualizar);
+const sliderZoom =
+document.getElementById("zoom");
+
+sliderX.addEventListener("input", atualizar);
+sliderY.addEventListener("input", atualizar);
+sliderOpacity.addEventListener("input", atualizar);
+sliderZoom.addEventListener("input", atualizar);
 
 function atualizar(){
 
-const x =
-document.getElementById("x").value;
-
-const y =
-document.getElementById("y").value;
-
-const opacity =
-document.getElementById("opacity").value;
-
-const zoom =
-document.getElementById("zoom").value;
+const x = sliderX.value;
+const y = sliderY.value;
+const opacity = sliderOpacity.value;
+const zoom = sliderZoom.value;
 
 modelo.style.left =
 `calc(50% + ${x}px)`;
 
 modelo.style.top =
-`calc(50% + ${y}px)`;
-
-modelo.style.opacity =
-opacity / 100;
-
-modelo.style.transform =
-`translate(-50%,-50%) scale(${zoom/100})`;
-
-}
-
-async function abrirCamera(){
-
-const video =
-document.getElementById("camera");
-
-try{
-
-const stream =
-await navigator.mediaDevices.getUserMedia({
-video:{
-facingMode:"environment"
-}
-});
-
-video.srcObject =
-stream;
-
-video.style.display =
-"block";
-
-}
-catch(erro){
-
-alert(
-"Não foi possível acessar a câmera."
-);
-
-}
-
-}
-
-</script>
-
-</body>
-
-</html>
+`calc(50% +
