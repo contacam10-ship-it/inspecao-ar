@@ -2,10 +2,11 @@
 <html lang="pt-BR">
 
 <head>
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
-<title>InspectAR AR Viewer</title>
+<title>InspectAR AR</title>
 
 <script type="module"
 src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js">
@@ -13,15 +14,11 @@ src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js">
 
 <style>
 
-*{
-box-sizing:border-box;
-font-family:Arial,sans-serif;
-}
-
 body{
 margin:0;
 background:#0b1736;
 overflow:hidden;
+font-family:Arial,sans-serif;
 }
 
 .header{
@@ -42,10 +39,6 @@ border-radius:8px;
 cursor:pointer;
 text-decoration:none;
 font-weight:bold;
-}
-
-.btn-save{
-background:#16a34a;
 }
 
 video{
@@ -71,48 +64,48 @@ opacity:.75;
 z-index:2;
 }
 
+.info{
+
+position:absolute;
+top:20px;
+right:20px;
+
+background:rgba(0,0,0,.85);
+
+padding:15px;
+
+border-radius:12px;
+
+width:260px;
+
+color:white;
+
+z-index:999;
+
+}
+
 .painel{
+
 position:absolute;
 bottom:20px;
 left:20px;
+
 background:rgba(0,0,0,.85);
+
 padding:15px;
+
 border-radius:12px;
+
 width:320px;
-z-index:999;
+
 color:white;
-}
 
-.painel h3{
-margin-top:0;
-}
+z-index:999;
 
-label{
-display:block;
-margin-top:12px;
-font-size:14px;
 }
 
 input{
 width:100%;
-}
-
-.info{
-position:absolute;
-top:20px;
-right:20px;
-background:rgba(0,0,0,.85);
-padding:15px;
-border-radius:12px;
-width:260px;
-z-index:999;
-color:white;
-}
-
-.status{
-margin-top:10px;
-font-weight:bold;
-color:#22c55e;
 }
 
 </style>
@@ -123,20 +116,15 @@ color:#22c55e;
 
 <div class="header">
 
-<a href="/" class="btn">
-← Dashboard
+<a href="/viewer.html"
+class="btn">
+← Voltar
 </a>
 
 <button
 class="btn"
 onclick="abrirCamera()">
 📷 Abrir Câmera
-</button>
-
-<button
-class="btn btn-save"
-onclick="salvarConfiguracao()">
-💾 Salvar
 </button>
 
 </div>
@@ -149,26 +137,18 @@ playsinline>
 
 <model-viewer
 id="modelo"
-src="/modelos/86699800_prt.glb"
 camera-controls
 auto-rotate
-shadow-intensity="1"
-exposure="1.2">
+shadow-intensity="1">
 </model-viewer>
 
 <div class="info">
 
-<h3>Peça Atual</h3>
+<h3>Peça Selecionada</h3>
 
-<p><b>86699800_prt</b></p>
-
-<p>Modo: Overlay CAD</p>
-
-<div
-class="status"
-id="status">
-Configuração carregada
-</div>
+<p id="pnAtual">
+Carregando...
+</p>
 
 </div>
 
@@ -176,33 +156,29 @@ Configuração carregada
 
 <h3>Alinhamento</h3>
 
-<label>Posição X</label>
-<input
-id="x"
+<label>X</label>
+<input id="x"
 type="range"
 min="-800"
 max="800"
 value="0">
 
-<label>Posição Y</label>
-<input
-id="y"
+<label>Y</label>
+<input id="y"
 type="range"
 min="-600"
 max="600"
 value="0">
 
 <label>Transparência</label>
-<input
-id="opacity"
+<input id="opacity"
 type="range"
 min="10"
 max="100"
 value="75">
 
 <label>Zoom</label>
-<input
-id="zoom"
+<input id="zoom"
 type="range"
 min="50"
 max="250"
@@ -215,32 +191,100 @@ value="100">
 const modelo =
 document.getElementById("modelo");
 
-const sliderX =
-document.getElementById("x");
+const modeloSelecionado =
+localStorage.getItem("modeloSelecionado");
 
-const sliderY =
-document.getElementById("y");
+const pnSelecionado =
+localStorage.getItem("pnSelecionado");
 
-const sliderOpacity =
-document.getElementById("opacity");
+if(modeloSelecionado){
 
-const sliderZoom =
-document.getElementById("zoom");
+modelo.src =
+modeloSelecionado;
 
-sliderX.addEventListener("input", atualizar);
-sliderY.addEventListener("input", atualizar);
-sliderOpacity.addEventListener("input", atualizar);
-sliderZoom.addEventListener("input", atualizar);
+}
+
+if(pnSelecionado){
+
+document.getElementById(
+"pnAtual"
+).innerHTML =
+pnSelecionado;
+
+}
 
 function atualizar(){
 
-const x = sliderX.value;
-const y = sliderY.value;
-const opacity = sliderOpacity.value;
-const zoom = sliderZoom.value;
+const x =
+document.getElementById("x").value;
+
+const y =
+document.getElementById("y").value;
+
+const opacity =
+document.getElementById("opacity").value;
+
+const zoom =
+document.getElementById("zoom").value;
 
 modelo.style.left =
 `calc(50% + ${x}px)`;
 
 modelo.style.top =
-`calc(50% +
+`calc(50% + ${y}px)`;
+
+modelo.style.opacity =
+opacity / 100;
+
+modelo.style.transform =
+`translate(-50%,-50%) scale(${zoom/100})`;
+
+}
+
+document.getElementById("x")
+.addEventListener("input", atualizar);
+
+document.getElementById("y")
+.addEventListener("input", atualizar);
+
+document.getElementById("opacity")
+.addEventListener("input", atualizar);
+
+document.getElementById("zoom")
+.addEventListener("input", atualizar);
+
+async function abrirCamera(){
+
+const video =
+document.getElementById("camera");
+
+try{
+
+const stream =
+await navigator.mediaDevices.getUserMedia({
+video:{
+facingMode:"environment"
+}
+});
+
+video.srcObject =
+stream;
+
+video.style.display =
+"block";
+
+}catch(e){
+
+alert(
+"Erro ao abrir câmera"
+);
+
+}
+
+}
+
+</script>
+
+</body>
+
+</html>
