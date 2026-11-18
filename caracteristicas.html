@@ -30,10 +30,11 @@ border:none;
 border-radius:8px;
 text-decoration:none;
 font-weight:bold;
+cursor:pointer;
 }
 
 .container{
-max-width:900px;
+max-width:1000px;
 margin:auto;
 padding:20px;
 }
@@ -46,45 +47,29 @@ margin-bottom:20px;
 }
 
 input,select{
-
 width:100%;
 padding:12px;
 margin-top:8px;
 margin-bottom:15px;
-
 border:none;
 border-radius:8px;
-
 }
 
 .salvar{
-
 background:#16a34a;
-
 color:white;
-
 padding:12px 18px;
-
 border:none;
-
 border-radius:8px;
-
 font-size:16px;
-
 cursor:pointer;
-
 }
 
 .item{
-
 background:#374151;
-
 padding:12px;
-
 border-radius:8px;
-
 margin-bottom:10px;
-
 }
 
 </style>
@@ -113,7 +98,7 @@ margin-bottom:10px;
 id="pn"
 placeholder="86699800">
 
-<label>Característica</label>
+<label>Nome da Característica</label>
 
 <input
 id="caracteristica"
@@ -125,7 +110,7 @@ placeholder="Furo Principal">
 
 <option>FURO</option>
 <option>COMPONENTE</option>
-<option>DIMENSÃO</option>
+<option>DIMENSAO</option>
 
 </select>
 
@@ -151,11 +136,11 @@ Salvar Característica
 
 <script>
 
-function carregar(){
+function carregarCaracteristicas(){
 
-const lista = JSON.parse(
-localStorage.getItem("caracteristicas")
-|| "[]"
+const lista =
+JSON.parse(
+localStorage.getItem("caracteristicas") || "[]"
 );
 
 const area =
@@ -169,11 +154,13 @@ area.innerHTML += `
 
 <div class="item">
 
-<b>${item.pn}</b><br>
+<b>PN:</b> ${item.pn}<br>
 
+<b>Característica:</b>
 ${item.caracteristica}<br>
 
-Tipo: ${item.tipo}
+<b>Tipo:</b>
+${item.tipo}
 
 </div>
 
@@ -202,9 +189,9 @@ return;
 
 }
 
-const lista = JSON.parse(
-localStorage.getItem("caracteristicas")
-|| "[]"
+const lista =
+JSON.parse(
+localStorage.getItem("caracteristicas") || "[]"
 );
 
 lista.push({
@@ -223,15 +210,13 @@ JSON.stringify(lista)
 document.getElementById("pn").value = "";
 document.getElementById("caracteristica").value = "";
 
-carregar();
+carregarCaracteristicas();
 
-alert(
-"Característica cadastrada"
-);
+alert("Característica salva");
 
 }
 
-carregar();
+carregarCaracteristicas();
 
 </script>
 
