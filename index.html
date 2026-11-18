@@ -1,56 +1,120 @@
-<a href="/caracteristicas.html">
-<div class="button">
-Características de Inspeção
-</div>
-</a>
-<a href="/cadastro-modelos.html">
-<div class="button">
-Cadastro de Modelos
-</div>
-</a>
 <!DOCTYPE html>
-<html>
+<html lang="pt-BR">
 
 <head>
+
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
 <title>InspectAR</title>
 
 <style>
 
-body{
-background:#111827;
-color:white;
-font-family:Arial;
+*{
 margin:0;
 padding:0;
+box-sizing:border-box;
+font-family:Arial,sans-serif;
+}
+
+body{
+background:#0f172a;
+color:white;
+min-height:100vh;
 }
 
 .header{
-background:#1f2937;
+background:#111827;
 padding:20px;
 text-align:center;
-font-size:28px;
-font-weight:bold;
+border-bottom:1px solid #374151;
+}
+
+.header h1{
+font-size:36px;
+}
+
+.header p{
+color:#94a3b8;
+margin-top:10px;
 }
 
 .container{
-padding:20px;
+max-width:1200px;
+margin:auto;
+padding:30px;
+}
+
+.cards{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+gap:20px;
+margin-bottom:30px;
 }
 
 .card{
-background:#374151;
+background:#1f2937;
 padding:20px;
-margin-bottom:15px;
-border-radius:10px;
+border-radius:12px;
+text-align:center;
 }
 
-.button{
+.card h2{
+font-size:14px;
+color:#94a3b8;
+margin-bottom:10px;
+}
+
+.card p{
+font-size:32px;
+font-weight:bold;
+}
+
+.menu{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+gap:20px;
+}
+
+.botao{
+display:block;
 background:#2563eb;
-padding:15px;
-border-radius:10px;
+color:white;
+text-decoration:none;
+padding:20px;
+border-radius:12px;
+font-size:20px;
+font-weight:bold;
 text-align:center;
-margin-top:20px;
-cursor:pointer;
+transition:0.3s;
+}
+
+.botao:hover{
+background:#1d4ed8;
+}
+
+.verde{
+background:#16a34a;
+}
+
+.verde:hover{
+background:#15803d;
+}
+
+.roxo{
+background:#7c3aed;
+}
+
+.roxo:hover{
+background:#6d28d9;
+}
+
+.laranja{
+background:#ea580c;
+}
+
+.laranja:hover{
+background:#c2410c;
 }
 
 </style>
@@ -60,33 +124,104 @@ cursor:pointer;
 <body>
 
 <div class="header">
-InspectAR
+
+<h1>InspectAR</h1>
+
+<p>
+Sistema de Inspeção Assistida por Realidade Aumentada
+</p>
+
 </div>
 
 <div class="container">
 
+<div class="cards">
+
 <div class="card">
-<h3>Total Inspeções</h3>
-<p>0</p>
+
+<h2>MODELOS CADASTRADOS</h2>
+
+<p id="totalModelos">
+0
+</p>
+
 </div>
 
 <div class="card">
-<h3>Aprovadas</h3>
-<p>0</p>
+
+<h2>CARACTERÍSTICAS</h2>
+
+<p id="totalCaracteristicas">
+0
+</p>
+
 </div>
 
-<div class="card">
-<h3>Reprovadas</h3>
-<p>0</p>
 </div>
 
-<a href="/viewer.html" style="text-decoration:none;">
-  <div class="button">
-    Inspecionar
-  </div>
+<div class="menu">
+
+<a
+href="/cadastro-modelos.html"
+class="botao">
+
+📦 Cadastro de Modelos
+
+</a>
+
+<a
+href="/caracteristicas.html"
+class="botao verde">
+
+📋 Características
+
+</a>
+
+<a
+href="/viewer.html"
+class="botao roxo">
+
+🔍 Inspecionar
+
+</a>
+
+<a
+href="/modelos/86699800_prt.glb"
+class="botao laranja">
+
+🧩 Testar GLB
+
 </a>
 
 </div>
+
+</div>
+
+<script>
+
+const modelos =
+JSON.parse(
+localStorage.getItem("modelos")
+|| "[]"
+);
+
+const caracteristicas =
+JSON.parse(
+localStorage.getItem("caracteristicas")
+|| "[]"
+);
+
+document.getElementById(
+"totalModelos"
+).innerHTML =
+modelos.length;
+
+document.getElementById(
+"totalCaracteristicas"
+).innerHTML =
+caracteristicas.length;
+
+</script>
 
 </body>
 
