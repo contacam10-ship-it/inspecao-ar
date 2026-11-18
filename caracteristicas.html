@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>Características de Inspeção</title>
+
+<style>
+
+body{
+margin:0;
+background:#0f172a;
+color:white;
+font-family:Arial,sans-serif;
+}
+
+.header{
+background:#111827;
+padding:15px;
+}
+
+.btn{
+background:#2563eb;
+color:white;
+padding:12px 18px;
+border:none;
+border-radius:8px;
+text-decoration:none;
+font-weight:bold;
+}
+
+.container{
+max-width:900px;
+margin:auto;
+padding:20px;
+}
+
+.card{
+background:#1f2937;
+padding:20px;
+border-radius:12px;
+margin-bottom:20px;
+}
+
+input,select{
+
+width:100%;
+padding:12px;
+margin-top:8px;
+margin-bottom:15px;
+
+border:none;
+border-radius:8px;
+
+}
+
+.salvar{
+
+background:#16a34a;
+
+color:white;
+
+padding:12px 18px;
+
+border:none;
+
+border-radius:8px;
+
+font-size:16px;
+
+cursor:pointer;
+
+}
+
+.item{
+
+background:#374151;
+
+padding:12px;
+
+border-radius:8px;
+
+margin-bottom:10px;
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="header">
+
+<a href="/" class="btn">
+← Dashboard
+</a>
+
+</div>
+
+<div class="container">
+
+<div class="card">
+
+<h2>Nova Característica</h2>
+
+<label>PN</label>
+
+<input
+id="pn"
+placeholder="86699800">
+
+<label>Característica</label>
+
+<input
+id="caracteristica"
+placeholder="Furo Principal">
+
+<label>Tipo</label>
+
+<select id="tipo">
+
+<option>FURO</option>
+<option>COMPONENTE</option>
+<option>DIMENSÃO</option>
+
+</select>
+
+<button
+class="salvar"
+onclick="salvarCaracteristica()">
+
+Salvar Característica
+
+</button>
+
+</div>
+
+<div class="card">
+
+<h2>Características Cadastradas</h2>
+
+<div id="lista"></div>
+
+</div>
+
+</div>
+
+<script>
+
+function carregar(){
+
+const lista = JSON.parse(
+localStorage.getItem("caracteristicas")
+|| "[]"
+);
+
+const area =
+document.getElementById("lista");
+
+area.innerHTML = "";
+
+lista.forEach(item=>{
+
+area.innerHTML += `
+
+<div class="item">
+
+<b>${item.pn}</b><br>
+
+${item.caracteristica}<br>
+
+Tipo: ${item.tipo}
+
+</div>
+
+`;
+
+});
+
+}
+
+function salvarCaracteristica(){
+
+const pn =
+document.getElementById("pn").value;
+
+const caracteristica =
+document.getElementById("caracteristica").value;
+
+const tipo =
+document.getElementById("tipo").value;
+
+if(!pn || !caracteristica){
+
+alert("Preencha todos os campos");
+
+return;
+
+}
+
+const lista = JSON.parse(
+localStorage.getItem("caracteristicas")
+|| "[]"
+);
+
+lista.push({
+
+pn,
+caracteristica,
+tipo
+
+});
+
+localStorage.setItem(
+"caracteristicas",
+JSON.stringify(lista)
+);
+
+document.getElementById("pn").value = "";
+document.getElementById("caracteristica").value = "";
+
+carregar();
+
+alert(
+"Característica cadastrada"
+);
+
+}
+
+carregar();
+
+</script>
+
+</body>
+
+</html>
