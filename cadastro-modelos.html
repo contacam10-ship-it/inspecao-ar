@@ -2,7 +2,6 @@
 <html lang="pt-BR">
 
 <head>
-
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
@@ -26,14 +25,13 @@ background:#111827;
 background:#2563eb;
 color:white;
 padding:12px 18px;
-border:none;
 border-radius:8px;
 text-decoration:none;
 font-weight:bold;
 }
 
 .container{
-max-width:1000px;
+max-width:1100px;
 margin:auto;
 padding:20px;
 }
@@ -48,7 +46,7 @@ margin-bottom:20px;
 input{
 width:100%;
 padding:12px;
-margin-top:8px;
+margin-top:6px;
 margin-bottom:15px;
 border:none;
 border-radius:8px;
@@ -77,14 +75,9 @@ margin-top:10px;
 background:#dc2626;
 color:white;
 border:none;
-padding:10px 15px;
+padding:10px 14px;
 border-radius:8px;
 cursor:pointer;
-}
-
-.info{
-color:#94a3b8;
-margin-bottom:15px;
 }
 
 </style>
@@ -108,22 +101,13 @@ margin-bottom:15px;
 <h2>Novo Modelo</h2>
 
 <label>PN</label>
-
-<input
-id="pn"
-placeholder="86699800">
+<input id="pn">
 
 <label>Descrição</label>
-
-<input
-id="descricao"
-placeholder="Pino de Fixação">
+<input id="descricao">
 
 <label>Arquivo GLB</label>
-
-<input
-id="arquivo"
-placeholder="86699800_prt.glb">
+<input id="arquivo">
 
 <button
 class="salvar"
@@ -139,10 +123,149 @@ Salvar Modelo
 
 <h2>Modelos Cadastrados</h2>
 
-<div
-class="info"
-id="quantidade">
+<div id="total"></div>
+
+<br>
+
+<div id="lista"></div>
+
 </div>
 
-<div id="lista">
-</div
+</div>
+
+<script>
+
+function carregarModelos(){
+
+const modelos =
+JSON.parse(
+localStorage.getItem("modelos")
+|| "[]"
+);
+
+const lista =
+document.getElementById("lista");
+
+const total =
+document.getElementById("total");
+
+total.innerHTML =
+"Total de modelos: " + modelos.length;
+
+lista.innerHTML = "";
+
+modelos.forEach(function(modelo,index){
+
+lista.innerHTML += `
+
+<div class="item">
+
+<b>PN:</b> ${modelo.pn}
+<br>
+
+<b>Descrição:</b> ${modelo.descricao}
+<br>
+
+<b>Arquivo:</b> ${modelo.arquivo}
+
+<br>
+
+<button
+class="excluir"
+onclick="excluirModelo(${index})">
+
+🗑 Excluir
+
+</button>
+
+</div>
+
+`;
+
+});
+
+}
+
+function salvarModelo(){
+
+const pn =
+document.getElementById("pn").value.trim();
+
+const descricao =
+document.getElementById("descricao").value.trim();
+
+const arquivo =
+document.getElementById("arquivo").value.trim();
+
+if(!pn || !arquivo){
+
+alert(
+"Preencha PN e Arquivo."
+);
+
+return;
+
+}
+
+const modelos =
+JSON.parse(
+localStorage.getItem("modelos")
+|| "[]"
+);
+
+const existe =
+modelos.find(
+m => m.pn === pn
+);
+
+if(existe){
+
+alert(
+"Já existe um cadastro para este PN."
+);
+
+return;
+
+}
+
+modelos.push({
+
+pn: pn,
+descricao: descricao,
+arquivo: arquivo
+
+});
+
+localStorage.setItem(
+"modelos",
+JSON.stringify(modelos)
+);
+
+document.getElementById("pn").value = "";
+document.getElementById("descricao").value = "";
+document.getElementById("arquivo").value = "";
+
+carregarModelos();
+
+}
+
+function excluirModelo(index){
+
+const modelos =
+JSON.parse(
+localStorage.getItem("modelos")
+|| "[]"
+);
+
+modelos.splice(index,1);
+
+localStorage.setItem(
+"modelos",
+JSON.stringify(modelos)
+);
+
+carregarModelos();
+
+}
+
+carregarModelos
