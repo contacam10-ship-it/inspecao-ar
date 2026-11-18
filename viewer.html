@@ -2,7 +2,6 @@
 <html lang="pt-BR">
 
 <head>
-
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
@@ -23,8 +22,6 @@ font-family:Arial,sans-serif;
 
 .header{
 padding:15px;
-display:flex;
-gap:10px;
 background:#111827;
 }
 
@@ -35,7 +32,6 @@ padding:12px 18px;
 border:none;
 border-radius:8px;
 text-decoration:none;
-cursor:pointer;
 font-weight:bold;
 }
 
@@ -49,26 +45,27 @@ flex-wrap:wrap;
 .lista{
 width:320px;
 background:#1f2937;
-padding:15px;
 border-radius:12px;
+padding:15px;
 }
 
-.lista button{
+.modelo-btn{
 width:100%;
-margin-bottom:10px;
 padding:12px;
+margin-bottom:10px;
 background:#374151;
 color:white;
 border:none;
 border-radius:8px;
 cursor:pointer;
+text-align:left;
 }
 
 .detalhes{
 flex:1;
 background:#1f2937;
-padding:20px;
 border-radius:12px;
+padding:20px;
 }
 
 model-viewer{
@@ -80,11 +77,13 @@ border-radius:12px;
 
 .info{
 margin-top:20px;
-line-height:1.8;
+}
+
+.info p{
+margin:8px 0;
 }
 
 .inspecionar{
-margin-top:20px;
 background:#16a34a;
 color:white;
 padding:14px 20px;
@@ -93,6 +92,7 @@ border-radius:8px;
 cursor:pointer;
 font-size:16px;
 font-weight:bold;
+margin-top:20px;
 }
 
 </style>
@@ -113,14 +113,16 @@ font-weight:bold;
 
 <div class="lista">
 
-<h3>Modelos Cadastrados</h3>
+<h3>Modelos Disponíveis</h3>
 
-<button onclick="selecionarModelo(
-'86699800_prt',
-'/modelos/86699800_prt.glb',
-'Pino de Fixação'
+<button
+class="modelo-btn"
+onclick="carregarModelo(
+'86699800',
+'Pino de Fixação',
+'/modelos/86699800_prt.glb'
 )">
-86699800_prt
+86699800
 </button>
 
 </div>
@@ -128,7 +130,7 @@ font-weight:bold;
 <div class="detalhes">
 
 <h2 id="titulo">
-Selecione um modelo
+Selecione uma peça
 </h2>
 
 <model-viewer
@@ -140,17 +142,17 @@ auto-rotate>
 <div class="info">
 
 <p>
-<b>PN:</b>
+<strong>PN:</strong>
 <span id="pn">-</span>
 </p>
 
 <p>
-<b>Descrição:</b>
+<strong>Descrição:</strong>
 <span id="descricao">-</span>
 </p>
 
 <p>
-<b>Status:</b>
+<strong>Status:</strong>
 Ativo
 </p>
 
@@ -170,37 +172,29 @@ onclick="inspecionar()">
 
 let modeloSelecionado = '';
 
-function selecionarModelo(
+function carregarModelo(
 pn,
-arquivo,
-descricao
+descricao,
+arquivo
 ){
 
 modeloSelecionado = arquivo;
 
-document
-.getElementById('viewer')
-.src = arquivo;
+document.getElementById("viewer").src = arquivo;
 
-document
-.getElementById('titulo')
-.innerHTML = pn;
+document.getElementById("titulo").innerHTML = pn;
 
-document
-.getElementById('pn')
-.innerHTML = pn;
+document.getElementById("pn").innerHTML = pn;
 
-document
-.getElementById('descricao')
-.innerHTML = descricao;
+document.getElementById("descricao").innerHTML = descricao;
 
 localStorage.setItem(
-'modeloSelecionado',
+"modeloSelecionado",
 arquivo
 );
 
 localStorage.setItem(
-'pnSelecionado',
+"pnSelecionado",
 pn
 );
 
@@ -208,10 +202,10 @@ pn
 
 function inspecionar(){
 
-if(!modeloSelecionado){
+if(modeloSelecionado === ''){
 
 alert(
-'Selecione um modelo primeiro'
+'Selecione uma peça primeiro'
 );
 
 return;
