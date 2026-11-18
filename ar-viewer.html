@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>InspectAR AR Viewer</title>
+
+<script type="module"
+src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js">
+</script>
+
+<style>
+
+body{
+margin:0;
+background:#111827;
+color:white;
+font-family:Arial;
+}
+
+.header{
+background:#0f172a;
+padding:15px;
+display:flex;
+gap:10px;
+align-items:center;
+flex-wrap:wrap;
+}
+
+.btn{
+background:#2563eb;
+color:white;
+padding:10px 20px;
+border:none;
+border-radius:8px;
+text-decoration:none;
+cursor:pointer;
+}
+
+.container{
+position:relative;
+width:100%;
+height:calc(100vh - 70px);
+overflow:hidden;
+}
+
+video{
+position:absolute;
+top:0;
+left:0;
+width:100%;
+height:100%;
+object-fit:cover;
+display:none;
+background:black;
+}
+
+model-viewer{
+position:absolute;
+width:350px;
+height:350px;
+top:50%;
+left:50%;
+transform:translate(-50%,-50%);
+background:transparent;
+opacity:0.65;
+}
+
+.controls{
+position:absolute;
+bottom:20px;
+left:20px;
+background:rgba(0,0,0,0.7);
+padding:15px;
+border-radius:10px;
+width:280px;
+z-index:10;
+}
+
+label{
+display:block;
+margin-top:10px;
+}
+
+input{
+width:100%;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="header">
+
+<a href="/" class="btn">
+← Dashboard
+</a>
+
+<button class="btn" onclick="abrirCamera()">
+📷 Abrir Câmera
+</button>
+
+</div>
+
+<div class="container">
+
+<video
+id="camera"
+autoplay
+playsinline>
+</video>
+
+<model-viewer
+id="modelo"
+src="https://modelviewer.dev/shared-assets/models/Astronaut.glb"
+camera-controls
+disable-pan
+shadow-intensity="1">
+</model-viewer>
+
+<div class="controls">
+
+<h3>Alinhamento</h3>
+
+<label>X</label>
+<input
+type="range"
+min="-300"
+max="300"
+value="0"
+id="posX">
+
+<label>Y</label>
+<input
+type="range"
+min="-300"
+max="300"
+value="0"
+id="posY">
+
+<label>Escala</label>
+<input
+type="range"
+min="100"
+max="700"
+value="350"
+id="scale">
+
+</div>
+
+</div>
+
+<script>
+
+async function abrirCamera(){
+
+const video =
+document.getElementById('camera');
+
+try{
+
+const stream =
+await navigator.mediaDevices.getUserMedia({
+video:{
+facingMode:'environment'
+}
+});
+
+video.srcObject=stream;
+video.style.display='block';
+
+}
+catch(err){
+
+alert('Não foi possível acessar a câmera.');
+
+}
+
+}
+
+const modelo =
+document.getElementById('modelo');
+
+document
+.getElementById('posX')
+.addEventListener('input', atualizar);
+
+document
+.getElementById('posY')
+.addEventListener('input', atualizar);
+
+document
+.getElementById('scale')
+.addEventListener('input', atualizar);
+
+function atualizar(){
+
+const x =
+document.getElementById('posX').value;
+
+const y =
+document.getElementById('posY').value;
+
+const escala =
+document.getElementById('scale').value;
+
+modelo.style.left =
+`calc(50% + ${x}px)`;
+
+modelo.style.top =
+`calc(50% + ${y}px)`;
+
+modelo.style.width =
+`${escala}px`;
+
+modelo.style.height =
+`${escala}px`;
+
+}
+
+</script>
+
+</body>
+
+</html>
