@@ -1,80 +1,217 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>InspectAR - Seleção de Modelo</title>
+
+<script type="module"
+src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js">
+</script>
+
+<style>
+
+body{
+margin:0;
+background:#0f172a;
+color:white;
+font-family:Arial,sans-serif;
+}
+
+.header{
+background:#111827;
+padding:15px;
+}
+
+.btn{
+background:#2563eb;
+color:white;
+padding:12px 18px;
+border:none;
+border-radius:8px;
+text-decoration:none;
+font-weight:bold;
+}
+
+.container{
+padding:20px;
+max-width:1400px;
+margin:auto;
+}
+
+.lista{
+display:flex;
+flex-wrap:wrap;
+gap:10px;
+margin-bottom:20px;
+}
+
+.modelo{
+background:#1f2937;
+padding:12px 20px;
+border:none;
+border-radius:8px;
+color:white;
+cursor:pointer;
+}
+
+.card{
+background:#1f2937;
+padding:20px;
+border-radius:12px;
+}
+
+model-viewer{
+width:100%;
+height:500px;
+background:#374151;
+border-radius:12px;
+}
+
+.inspecionar{
+margin-top:20px;
+background:#16a34a;
+padding:14px 20px;
+border:none;
+border-radius:8px;
+font-size:16px;
+font-weight:bold;
+color:white;
+cursor:pointer;
+}
+
+.info{
+margin-top:20px;
+line-height:1.8;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="header">
+
+<a href="/" class="btn">
+← Dashboard
+</a>
+
+</div>
+
+<div class="container">
+
+<h2>Modelos Disponíveis</h2>
+
+<div
+class="lista"
+id="listaModelos">
+</div>
+
+<div class="card">
+
+<h2 id="titulo">
+
+Selecione uma peça
+
+</h2>
+
+<model-viewer
+id="viewer"
+camera-controls
+auto-rotate>
+</model-viewer>
+
+<div class="info">
+
+<p>
+<b>PN:</b>
+<span id="pn">-</span>
+</p>
+
+<p>
+<b>Descrição:</b>
+<span id="descricao">-</span>
+</p>
+
+</div>
+
+<button
+class="inspecionar"
+onclick="inspecionar()">
+
+🔍 Iniciar Inspeção
+
+</button>
+
+</div>
+
+</div>
+
 <script>
 
 let modeloSelecionado = '';
 
-function carregarLista(){
-
 const modelos =
 JSON.parse(
-localStorage.getItem("modelos")
-|| "[]"
+localStorage.getItem('modelos') || '[]'
 );
 
 const lista =
-document.querySelector(".lista");
-
-lista.innerHTML =
-"<h3>Modelos Disponíveis</h3>";
+document.getElementById('listaModelos');
 
 modelos.forEach(modelo=>{
 
-lista.innerHTML += `
+const btn =
+document.createElement('button');
 
-<button
-class="modelo-btn"
-onclick="carregarModelo(
-'${modelo.pn}',
-'${modelo.descricao}',
-'/modelos/${modelo.arquivo}'
-)">
-${modelo.pn}
-</button>
+btn.className =
+'modelo';
 
-`;
+btn.innerHTML =
+modelo.pn;
 
-});
-
-}
-
-function carregarModelo(
-pn,
-descricao,
-arquivo
-){
+btn.onclick = ()=>{
 
 modeloSelecionado =
-arquivo;
+'/modelos/' + modelo.arquivo;
 
-document.getElementById("viewer").src =
-arquivo;
+document.getElementById('viewer').src =
+modeloSelecionado;
 
-document.getElementById("titulo").innerHTML =
-pn;
+document.getElementById('titulo').innerHTML =
+modelo.pn;
 
-document.getElementById("pn").innerHTML =
-pn;
+document.getElementById('pn').innerHTML =
+modelo.pn;
 
-document.getElementById("descricao").innerHTML =
-descricao;
+document.getElementById('descricao').innerHTML =
+modelo.descricao;
 
 localStorage.setItem(
-"modeloSelecionado",
-arquivo
+'modeloSelecionado',
+modeloSelecionado
 );
 
 localStorage.setItem(
-"pnSelecionado",
-pn
+'pnSelecionado',
+modelo.pn
 );
 
-}
+};
+
+lista.appendChild(btn);
+
+});
 
 function inspecionar(){
 
 if(!modeloSelecionado){
 
 alert(
-"Selecione um modelo"
+'Selecione uma peça primeiro.'
 );
 
 return;
@@ -82,10 +219,12 @@ return;
 }
 
 window.location.href =
-"/ar-viewer.html";
+'/ar-viewer.html';
 
 }
 
-carregarLista();
-
 </script>
+
+</body>
+
+</html>
