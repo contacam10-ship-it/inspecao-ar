@@ -1,176 +1,40 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
+<script>
 
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+let modeloSelecionado = '';
 
-<title>InspectAR - Modelos</title>
+function carregarLista(){
 
-<script type="module"
-src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js">
-</script>
+const modelos =
+JSON.parse(
+localStorage.getItem("modelos")
+|| "[]"
+);
 
-<style>
+const lista =
+document.querySelector(".lista");
 
-body{
-margin:0;
-background:#0f172a;
-color:white;
-font-family:Arial,sans-serif;
-}
+lista.innerHTML =
+"<h3>Modelos Disponíveis</h3>";
 
-.header{
-padding:15px;
-background:#111827;
-}
+modelos.forEach(modelo=>{
 
-.btn{
-background:#2563eb;
-color:white;
-padding:12px 18px;
-border:none;
-border-radius:8px;
-text-decoration:none;
-font-weight:bold;
-}
-
-.container{
-display:flex;
-gap:20px;
-padding:20px;
-flex-wrap:wrap;
-}
-
-.lista{
-width:320px;
-background:#1f2937;
-border-radius:12px;
-padding:15px;
-}
-
-.modelo-btn{
-width:100%;
-padding:12px;
-margin-bottom:10px;
-background:#374151;
-color:white;
-border:none;
-border-radius:8px;
-cursor:pointer;
-text-align:left;
-}
-
-.detalhes{
-flex:1;
-background:#1f2937;
-border-radius:12px;
-padding:20px;
-}
-
-model-viewer{
-width:100%;
-height:450px;
-background:#374151;
-border-radius:12px;
-}
-
-.info{
-margin-top:20px;
-}
-
-.info p{
-margin:8px 0;
-}
-
-.inspecionar{
-background:#16a34a;
-color:white;
-padding:14px 20px;
-border:none;
-border-radius:8px;
-cursor:pointer;
-font-size:16px;
-font-weight:bold;
-margin-top:20px;
-}
-
-</style>
-
-</head>
-
-<body>
-
-<div class="header">
-
-<a href="/" class="btn">
-← Dashboard
-</a>
-
-</div>
-
-<div class="container">
-
-<div class="lista">
-
-<h3>Modelos Disponíveis</h3>
+lista.innerHTML += `
 
 <button
 class="modelo-btn"
 onclick="carregarModelo(
-'86699800',
-'Pino de Fixação',
-'/modelos/86699800_prt.glb'
+'${modelo.pn}',
+'${modelo.descricao}',
+'/modelos/${modelo.arquivo}'
 )">
-86699800
+${modelo.pn}
 </button>
 
-</div>
+`;
 
-<div class="detalhes">
+});
 
-<h2 id="titulo">
-Selecione uma peça
-</h2>
-
-<model-viewer
-id="viewer"
-camera-controls
-auto-rotate>
-</model-viewer>
-
-<div class="info">
-
-<p>
-<strong>PN:</strong>
-<span id="pn">-</span>
-</p>
-
-<p>
-<strong>Descrição:</strong>
-<span id="descricao">-</span>
-</p>
-
-<p>
-<strong>Status:</strong>
-Ativo
-</p>
-
-</div>
-
-<button
-class="inspecionar"
-onclick="inspecionar()">
-🔍 Inspecionar
-</button>
-
-</div>
-
-</div>
-
-<script>
-
-let modeloSelecionado = '';
+}
 
 function carregarModelo(
 pn,
@@ -178,15 +42,20 @@ descricao,
 arquivo
 ){
 
-modeloSelecionado = arquivo;
+modeloSelecionado =
+arquivo;
 
-document.getElementById("viewer").src = arquivo;
+document.getElementById("viewer").src =
+arquivo;
 
-document.getElementById("titulo").innerHTML = pn;
+document.getElementById("titulo").innerHTML =
+pn;
 
-document.getElementById("pn").innerHTML = pn;
+document.getElementById("pn").innerHTML =
+pn;
 
-document.getElementById("descricao").innerHTML = descricao;
+document.getElementById("descricao").innerHTML =
+descricao;
 
 localStorage.setItem(
 "modeloSelecionado",
@@ -202,10 +71,10 @@ pn
 
 function inspecionar(){
 
-if(modeloSelecionado === ''){
+if(!modeloSelecionado){
 
 alert(
-'Selecione uma peça primeiro'
+"Selecione um modelo"
 );
 
 return;
@@ -213,12 +82,10 @@ return;
 }
 
 window.location.href =
-'/ar-viewer.html';
+"/ar-viewer.html";
 
 }
 
+carregarLista();
+
 </script>
-
-</body>
-
-</html>
