@@ -2,7 +2,6 @@
 <html lang="pt-BR">
 
 <head>
-
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
@@ -92,9 +91,7 @@ font-weight:bold;
 
 <div class="header">
 
-<a
-href="/"
-class="btn">
+<a href="/" class="btn">
 ← Dashboard
 </a>
 
@@ -104,15 +101,13 @@ class="btn">
 
 <h2>Modelos Disponíveis</h2>
 
-<div
-id="listaModelos"
-class="lista">
+<div id="listaModelos" class="lista">
 </div>
 
 <div class="card">
 
 <h2 id="titulo">
-Selecione uma Peça
+Selecione uma peça
 </h2>
 
 <model-viewer
@@ -125,107 +120,4 @@ auto-rotate>
 
 <p>
 <b>PN:</b>
-<span id="pn">-</span>
-</p>
-
-<p>
-<b>Descrição:</b>
-<span id="descricao">-</span>
-</p>
-
-</div>
-
-<button
-class="inspecionar"
-onclick="iniciarInspecao()">
-
-🔍 Iniciar Inspeção
-
-</button>
-
-</div>
-
-</div>
-
-<script>
-
-let modeloAtual = null;
-
-const lista =
-document.getElementById("listaModelos");
-
-const modelos =
-JSON.parse(
-localStorage.getItem("modelos")
-|| "[]"
-);
-
-modelos.forEach(function(modelo){
-
-const botao =
-document.createElement("button");
-
-botao.className =
-"modelo-btn";
-
-botao.innerText =
-modelo.pn;
-
-botao.onclick = function(){
-
-modeloAtual = modelo;
-
-document.getElementById("titulo")
-.innerText =
-modelo.pn;
-
-document.getElementById("pn")
-.innerText =
-modelo.pn;
-
-document.getElementById("descricao")
-.innerText =
-modelo.descricao;
-
-document.getElementById("viewer")
-.src =
-"/modelos/" + modelo.arquivo;
-
-};
-
-lista.appendChild(botao);
-
-});
-
-function iniciarInspecao(){
-
-if(modeloAtual === null){
-
-alert(
-"Selecione uma peça primeiro."
-);
-
-return;
-
-}
-
-sessionStorage.setItem(
-"pnSelecionado",
-modeloAtual.pn
-);
-
-sessionStorage.setItem(
-"modeloSelecionado",
-"/modelos/" + modeloAtual.arquivo
-);
-
-window.location.href =
-"/ar-viewer.html";
-
-}
-
-</script>
-
-</body>
-
-</html>
+<span id="pn">-
