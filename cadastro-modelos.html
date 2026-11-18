@@ -80,6 +80,11 @@ border-radius:8px;
 cursor:pointer;
 }
 
+.info{
+margin-bottom:15px;
+color:#cbd5e1;
+}
+
 </style>
 
 </head>
@@ -123,11 +128,13 @@ Salvar Modelo
 
 <h2>Modelos Cadastrados</h2>
 
-<div id="total"></div>
+<div
+id="total"
+class="info">
+</div>
 
-<br>
-
-<div id="lista"></div>
+<div id="lista">
+</div>
 
 </div>
 
@@ -143,14 +150,11 @@ localStorage.getItem("modelos")
 || "[]"
 );
 
+document.getElementById("total").innerHTML =
+"Total de modelos: " + modelos.length;
+
 const lista =
 document.getElementById("lista");
-
-const total =
-document.getElementById("total");
-
-total.innerHTML =
-"Total de modelos: " + modelos.length;
 
 lista.innerHTML = "";
 
@@ -200,7 +204,7 @@ document.getElementById("arquivo").value.trim();
 if(!pn || !arquivo){
 
 alert(
-"Preencha PN e Arquivo."
+"Preencha PN e Arquivo GLB."
 );
 
 return;
@@ -221,7 +225,7 @@ m => m.pn === pn
 if(existe){
 
 alert(
-"Já existe um cadastro para este PN."
+"Já existe um modelo com este PN."
 );
 
 return;
@@ -247,9 +251,19 @@ document.getElementById("arquivo").value = "";
 
 carregarModelos();
 
+alert(
+"Modelo cadastrado com sucesso."
+);
+
 }
 
 function excluirModelo(index){
+
+if(!confirm(
+"Deseja excluir este modelo?"
+)){
+return;
+}
 
 const modelos =
 JSON.parse(
@@ -268,4 +282,10 @@ carregarModelos();
 
 }
 
-carregarModelos
+carregarModelos();
+
+</script>
+
+</body>
+
+</html>
