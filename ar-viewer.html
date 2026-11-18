@@ -5,7 +5,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
-<title>InspectAR AR</title>
+<title>InspectAR AR Viewer</title>
 
 <script type="module"
 src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js">
@@ -15,12 +15,11 @@ src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js">
 
 *{
 box-sizing:border-box;
-margin:0;
-padding:0;
 font-family:Arial,sans-serif;
 }
 
 body{
+margin:0;
 background:#0f172a;
 color:white;
 overflow:hidden;
@@ -30,16 +29,16 @@ overflow:hidden;
 position:absolute;
 top:10px;
 left:10px;
-z-index:1000;
 display:flex;
 gap:10px;
+z-index:999;
 }
 
 .btn{
 background:#2563eb;
 color:white;
-border:none;
 padding:12px 18px;
+border:none;
 border-radius:8px;
 cursor:pointer;
 text-decoration:none;
@@ -58,23 +57,15 @@ z-index:1;
 }
 
 model-viewer{
-
 position:absolute;
-
 top:50%;
 left:50%;
-
-width:500px;
-height:500px;
-
+width:100vw;
+height:100vh;
 transform:translate(-50%,-50%);
-
 background:transparent;
-
-opacity:.70;
-
 z-index:2;
-
+pointer-events:auto;
 }
 
 .painel{
@@ -83,29 +74,49 @@ position:absolute;
 bottom:20px;
 left:20px;
 
-background:rgba(0,0,0,.80);
+background:rgba(0,0,0,.85);
 
 padding:15px;
 
 border-radius:12px;
 
-width:300px;
+width:320px;
 
-z-index:1000;
+z-index:999;
 
 }
 
 .painel h3{
-margin-bottom:10px;
+margin-top:0;
 }
 
 label{
 display:block;
-margin-top:10px;
+margin-top:12px;
+font-size:14px;
 }
 
 input{
 width:100%;
+}
+
+.info{
+
+position:absolute;
+
+top:20px;
+right:20px;
+
+background:rgba(0,0,0,.85);
+
+padding:15px;
+
+border-radius:12px;
+
+width:260px;
+
+z-index:999;
+
 }
 
 </style>
@@ -120,9 +131,7 @@ width:100%;
 ← Dashboard
 </a>
 
-<button
-class="btn"
-onclick="abrirCamera()">
+<button class="btn" onclick="abrirCamera()">
 📷 Abrir Câmera
 </button>
 
@@ -138,72 +147,4 @@ playsinline>
 id="modelo"
 src="/modelos/86699800_prt.glb"
 camera-controls
-disable-pan
-shadow-intensity="1">
-</model-viewer>
-
-<div class="painel">
-
-<h3>Alinhamento</h3>
-
-<label>X</label>
-<input
-id="x"
-type="range"
-min="-600"
-max="600"
-value="0">
-
-<label>Y</label>
-<input
-id="y"
-type="range"
-min="-500"
-max="500"
-value="0">
-
-<label>Escala</label>
-<input
-id="escala"
-type="range"
-min="100"
-max="1200"
-value="500">
-
-<label>Transparência</label>
-<input
-id="opacidade"
-type="range"
-min="10"
-max="100"
-value="70">
-
-</div>
-
-<script>
-
-const modelo =
-document.getElementById("modelo");
-
-document.getElementById("x")
-.addEventListener("input", atualizar);
-
-document.getElementById("y")
-.addEventListener("input", atualizar);
-
-document.getElementById("escala")
-.addEventListener("input", atualizar);
-
-document.getElementById("opacidade")
-.addEventListener("input", atualizar);
-
-function atualizar(){
-
-const x =
-document.getElementById("x").value;
-
-const y =
-document.getElementById("y").value;
-
-const escala =
-document.
+shadow-intensity="1"
