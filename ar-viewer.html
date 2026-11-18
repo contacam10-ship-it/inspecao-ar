@@ -14,11 +14,15 @@ src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js">
 
 <style>
 
+*{
+box-sizing:border-box;
+font-family:Arial,sans-serif;
+}
+
 body{
 margin:0;
 background:#0b1736;
 color:white;
-font-family:Arial,sans-serif;
 overflow:hidden;
 }
 
@@ -28,7 +32,7 @@ top:10px;
 left:10px;
 display:flex;
 gap:10px;
-z-index:999;
+z-index:1000;
 }
 
 .btn{
@@ -59,65 +63,92 @@ top:50%;
 left:50%;
 width:900px;
 height:650px;
-transform:translate(-50%,-50%) scale(1);
+transform:translate(-50%,-50%);
 background:transparent;
-opacity:.75;
+opacity:0.75;
 z-index:2;
 }
 
 .info{
+
 position:absolute;
 top:20px;
 right:20px;
-background:rgba(0,0,0,.85);
+
+width:300px;
+
+background:rgba(0,0,0,0.85);
+
 padding:15px;
+
 border-radius:12px;
-width:280px;
-z-index:999;
+
+z-index:1000;
+
 }
 
 .caracteristicas{
+
 position:absolute;
-top:180px;
+top:190px;
 right:20px;
-background:rgba(0,0,0,.85);
+
+width:300px;
+
+background:rgba(0,0,0,0.85);
+
 padding:15px;
+
 border-radius:12px;
-width:280px;
-max-height:350px;
+
+z-index:1000;
+
+max-height:400px;
+
 overflow:auto;
-z-index:999;
+
 }
 
 .item{
+
 padding:10px;
+
 margin-bottom:8px;
+
 background:#1f2937;
+
 border-radius:8px;
+
 }
 
 .painel{
+
 position:absolute;
 bottom:20px;
 left:20px;
-background:rgba(0,0,0,.85);
+
+width:350px;
+
+background:rgba(0,0,0,0.85);
+
 padding:15px;
+
 border-radius:12px;
-width:320px;
-z-index:999;
+
+z-index:1000;
+
 }
 
 input{
 width:100%;
 }
 
-.status{
-margin-top:10px;
+.status-ok{
 color:#22c55e;
 font-weight:bold;
 }
 
-.erro{
+.status-erro{
 color:#ef4444;
 font-weight:bold;
 }
@@ -160,14 +191,12 @@ shadow-intensity="1">
 <h3>Peça Selecionada</h3>
 
 <p id="pnAtual">
-Carregando...
+-
 </p>
 
-<div
-id="statusModelo"
-class="status">
-Carregando modelo...
-</div>
+<p id="statusModelo">
+Aguardando
+</p>
 
 </div>
 
@@ -177,7 +206,7 @@ Carregando modelo...
 
 <div id="listaCaracteristicas">
 
-Nenhuma característica carregada.
+Nenhuma característica encontrada.
 
 </div>
 
@@ -188,140 +217,4 @@ Nenhuma característica carregada.
 <h3>Alinhamento</h3>
 
 <label>X</label>
-
-<input
-id="x"
-type="range"
-min="-800"
-max="800"
-value="0">
-
-<label>Y</label>
-
-<input
-id="y"
-type="range"
-min="-600"
-max="600"
-value="0">
-
-<label>Transparência</label>
-
-<input
-id="opacity"
-type="range"
-min="10"
-max="100"
-value="75">
-
-<label>Zoom</label>
-
-<input
-id="zoom"
-type="range"
-min="50"
-max="250"
-value="100">
-
-</div>
-
-<script>
-
-const modelo =
-document.getElementById("modelo");
-
-const modeloSelecionado =
-localStorage.getItem("modeloSelecionado");
-
-const pnSelecionado =
-localStorage.getItem("pnSelecionado");
-
-const statusModelo =
-document.getElementById("statusModelo");
-
-if(modeloSelecionado){
-
-modelo.src =
-modeloSelecionado;
-
-statusModelo.innerHTML =
-"✅ Modelo carregado";
-
-}else{
-
-statusModelo.className =
-"erro";
-
-statusModelo.innerHTML =
-"❌ Nenhum modelo selecionado";
-
-}
-
-if(pnSelecionado){
-
-document.getElementById("pnAtual")
-.innerHTML =
-pnSelecionado;
-
-}else{
-
-document.getElementById("pnAtual")
-.innerHTML =
-"Nenhuma peça selecionada";
-
-}
-
-const caracteristicas =
-JSON.parse(
-localStorage.getItem("caracteristicas")
-|| "[]"
-);
-
-const listaCaracteristicas =
-document.getElementById(
-"listaCaracteristicas"
-);
-
-listaCaracteristicas.innerHTML = "";
-
-const caracteristicasFiltradas =
-caracteristicas.filter(item =>
-item.pn === pnSelecionado
-);
-
-if(caracteristicasFiltradas.length === 0){
-
-listaCaracteristicas.innerHTML =
-"Nenhuma característica cadastrada.";
-
-}else{
-
-caracteristicasFiltradas.forEach(item=>{
-
-listaCaracteristicas.innerHTML += `
-<div class="item">
-
-☐ ${item.caracteristica}
-
-<br>
-
-<small>
-${item.tipo}
-</small>
-
-</div>
-`;
-
-});
-
-}
-
-function atualizar(){
-
-const x =
-document.getElementById("x").value;
-
-const y =
-document.getElementById("y").value;
-
-const opacity
+<input id="x" type="
