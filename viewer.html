@@ -120,4 +120,97 @@ auto-rotate>
 
 <p>
 <b>PN:</b>
-<span id="pn">-
+<span id="pn">-</span>
+</p>
+
+<p>
+<b>Descrição:</b>
+<span id="descricao">-</span>
+</p>
+
+</div>
+
+<button
+class="inspecionar"
+onclick="iniciarInspecao()">
+
+🔍 Iniciar Inspeção
+
+</button>
+
+</div>
+
+</div>
+
+<script>
+
+let modeloAtual = null;
+
+const modelos =
+JSON.parse(
+localStorage.getItem("modelos")
+|| "[]"
+);
+
+const lista =
+document.getElementById("listaModelos");
+
+modelos.forEach(function(modelo){
+
+const btn =
+document.createElement("button");
+
+btn.className =
+"modelo-btn";
+
+btn.innerHTML =
+modelo.pn;
+
+btn.onclick = function(){
+
+modeloAtual = modelo;
+
+document.getElementById("viewer").src =
+"/modelos/" + modelo.arquivo;
+
+document.getElementById("titulo").innerHTML =
+modelo.pn;
+
+document.getElementById("pn").innerHTML =
+modelo.pn;
+
+document.getElementById("descricao").innerHTML =
+modelo.descricao;
+
+};
+
+lista.appendChild(btn);
+
+});
+
+function iniciarInspecao(){
+
+if(!modeloAtual){
+
+alert(
+"Selecione uma peça primeiro."
+);
+
+return;
+
+}
+
+window.location.href =
+"/ar-viewer.html?pn=" +
+encodeURIComponent(modeloAtual.pn)
++
+"&arquivo=" +
+encodeURIComponent(modeloAtual.arquivo);
+
+}
+
+</script>
+
+</body>
+
+</html>
