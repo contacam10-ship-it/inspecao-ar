@@ -17,8 +17,9 @@ src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js">
 body{
 margin:0;
 background:#0b1736;
-overflow:hidden;
+color:white;
 font-family:Arial,sans-serif;
+overflow:hidden;
 }
 
 .header{
@@ -65,83 +66,60 @@ z-index:2;
 }
 
 .info{
-
 position:absolute;
 top:20px;
 right:20px;
-
 background:rgba(0,0,0,.85);
-
 padding:15px;
-
 border-radius:12px;
-
 width:280px;
-
-color:white;
-
 z-index:999;
-
-}
-
-.painel{
-
-position:absolute;
-bottom:20px;
-left:20px;
-
-background:rgba(0,0,0,.85);
-
-padding:15px;
-
-border-radius:12px;
-
-width:320px;
-
-color:white;
-
-z-index:999;
-
 }
 
 .caracteristicas{
-
 position:absolute;
-
-top:220px;
+top:180px;
 right:20px;
-
 background:rgba(0,0,0,.85);
-
 padding:15px;
-
 border-radius:12px;
-
 width:280px;
-
-color:white;
-
-z-index:999;
-
 max-height:350px;
-
 overflow:auto;
-
+z-index:999;
 }
 
 .item{
-
-padding:8px;
+padding:10px;
 margin-bottom:8px;
-
 background:#1f2937;
-
 border-radius:8px;
+}
 
+.painel{
+position:absolute;
+bottom:20px;
+left:20px;
+background:rgba(0,0,0,.85);
+padding:15px;
+border-radius:12px;
+width:320px;
+z-index:999;
 }
 
 input{
 width:100%;
+}
+
+.status{
+margin-top:10px;
+color:#22c55e;
+font-weight:bold;
+}
+
+.erro{
+color:#ef4444;
+font-weight:bold;
 }
 
 </style>
@@ -152,19 +130,14 @@ width:100%;
 
 <div class="header">
 
-<a href="/viewer.html"
-class="btn">
-
+<a href="/viewer.html" class="btn">
 ← Voltar
-
 </a>
 
 <button
 class="btn"
 onclick="abrirCamera()">
-
 📷 Abrir Câmera
-
 </button>
 
 </div>
@@ -187,10 +160,14 @@ shadow-intensity="1">
 <h3>Peça Selecionada</h3>
 
 <p id="pnAtual">
-
 Carregando...
-
 </p>
+
+<div
+id="statusModelo"
+class="status">
+Carregando modelo...
+</div>
 
 </div>
 
@@ -199,6 +176,9 @@ Carregando...
 <h3>Características Críticas</h3>
 
 <div id="listaCaracteristicas">
+
+Nenhuma característica carregada.
+
 </div>
 
 </div>
@@ -255,24 +235,39 @@ localStorage.getItem("modeloSelecionado");
 
 const pnSelecionado =
 localStorage.getItem("pnSelecionado");
-  alert(
-"PN: " + pnSelecionado +
-"\nModelo: " + modeloSelecionado
-);
+
+const statusModelo =
+document.getElementById("statusModelo");
 
 if(modeloSelecionado){
 
 modelo.src =
 modeloSelecionado;
 
+statusModelo.innerHTML =
+"✅ Modelo carregado";
+
+}else{
+
+statusModelo.className =
+"erro";
+
+statusModelo.innerHTML =
+"❌ Nenhum modelo selecionado";
+
 }
 
 if(pnSelecionado){
 
-document
-.getElementById("pnAtual")
+document.getElementById("pnAtual")
 .innerHTML =
 pnSelecionado;
+
+}else{
+
+document.getElementById("pnAtual")
+.innerHTML =
+"Nenhuma peça selecionada";
 
 }
 
@@ -282,17 +277,28 @@ localStorage.getItem("caracteristicas")
 || "[]"
 );
 
-const lista =
+const listaCaracteristicas =
 document.getElementById(
 "listaCaracteristicas"
 );
 
-caracteristicas
-.filter(item=>item.pn===pnSelecionado)
-.forEach(item=>{
+listaCaracteristicas.innerHTML = "";
 
-lista.innerHTML += `
+const caracteristicasFiltradas =
+caracteristicas.filter(item =>
+item.pn === pnSelecionado
+);
 
+if(caracteristicasFiltradas.length === 0){
+
+listaCaracteristicas.innerHTML =
+"Nenhuma característica cadastrada.";
+
+}else{
+
+caracteristicasFiltradas.forEach(item=>{
+
+listaCaracteristicas.innerHTML += `
 <div class="item">
 
 ☐ ${item.caracteristica}
@@ -304,10 +310,11 @@ ${item.tipo}
 </small>
 
 </div>
-
 `;
 
 });
+
+}
 
 function atualizar(){
 
@@ -317,14 +324,4 @@ document.getElementById("x").value;
 const y =
 document.getElementById("y").value;
 
-const opacity =
-document.getElementById("opacity").value;
-
-const zoom =
-document.getElementById("zoom").value;
-
-modelo.style.left =
-`calc(50% + ${x}px)`;
-
-modelo.style.top =
-`calc(50%
+const opacity
