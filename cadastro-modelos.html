@@ -2,36 +2,43 @@
 <html lang="pt-BR">
 
 <head>
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
-<title>Cadastro de Modelos</title>
+<title>InspectAR - Cadastro de Modelos</title>
 
 <style>
 
-body{
+*{
 margin:0;
-background:#0f172a;
-color:white;
+padding:0;
+box-sizing:border-box;
 font-family:Arial,sans-serif;
 }
 
+body{
+background:#0f172a;
+color:white;
+min-height:100vh;
+}
+
 .header{
-padding:15px;
 background:#111827;
+padding:20px;
 }
 
 .btn{
 background:#2563eb;
 color:white;
+text-decoration:none;
 padding:12px 18px;
 border-radius:8px;
-text-decoration:none;
 font-weight:bold;
 }
 
 .container{
-max-width:1100px;
+max-width:1200px;
 margin:auto;
 padding:20px;
 }
@@ -43,27 +50,31 @@ border-radius:12px;
 margin-bottom:20px;
 }
 
+label{
+display:block;
+margin-top:15px;
+margin-bottom:5px;
+}
+
 input{
 width:100%;
 padding:12px;
-margin-top:6px;
-margin-bottom:15px;
 border:none;
 border-radius:8px;
 }
 
 .salvar{
+margin-top:20px;
 background:#16a34a;
 color:white;
-padding:12px 18px;
 border:none;
+padding:12px 20px;
 border-radius:8px;
 cursor:pointer;
-font-size:16px;
 font-weight:bold;
 }
 
-.item{
+.modelo{
 background:#374151;
 padding:15px;
 border-radius:8px;
@@ -75,7 +86,7 @@ margin-top:10px;
 background:#dc2626;
 color:white;
 border:none;
-padding:10px 14px;
+padding:10px 15px;
 border-radius:8px;
 cursor:pointer;
 }
@@ -83,6 +94,7 @@ cursor:pointer;
 .info{
 margin-bottom:15px;
 color:#cbd5e1;
+font-weight:bold;
 }
 
 </style>
@@ -106,13 +118,19 @@ color:#cbd5e1;
 <h2>Novo Modelo</h2>
 
 <label>PN</label>
-<input id="pn">
+<input
+id="pn"
+placeholder="86699800">
 
 <label>Descrição</label>
-<input id="descricao">
+<input
+id="descricao"
+placeholder="Pino de Fixação">
 
 <label>Arquivo GLB</label>
-<input id="arquivo">
+<input
+id="arquivo"
+placeholder="86699800_prt.glb">
 
 <button
 class="salvar"
@@ -150,7 +168,8 @@ localStorage.getItem("modelos")
 || "[]"
 );
 
-document.getElementById("total").innerHTML =
+document.getElementById("total")
+.innerHTML =
 "Total de modelos: " + modelos.length;
 
 const lista =
@@ -162,15 +181,19 @@ modelos.forEach(function(modelo,index){
 
 lista.innerHTML += `
 
-<div class="item">
+<div class="modelo">
 
 <b>PN:</b> ${modelo.pn}
-<br>
 
-<b>Descrição:</b> ${modelo.descricao}
-<br>
+<br><br>
 
-<b>Arquivo:</b> ${modelo.arquivo}
+<b>Descrição:</b>
+${modelo.descricao}
+
+<br><br>
+
+<b>Arquivo:</b>
+${modelo.arquivo}
 
 <br>
 
@@ -193,13 +216,16 @@ onclick="excluirModelo(${index})">
 function salvarModelo(){
 
 const pn =
-document.getElementById("pn").value.trim();
+document.getElementById("pn")
+.value.trim();
 
 const descricao =
-document.getElementById("descricao").value.trim();
+document.getElementById("descricao")
+.value.trim();
 
 const arquivo =
-document.getElementById("arquivo").value.trim();
+document.getElementById("arquivo")
+.value.trim();
 
 if(!pn || !arquivo){
 
@@ -225,7 +251,7 @@ m => m.pn === pn
 if(existe){
 
 alert(
-"Já existe um modelo com este PN."
+"Já existe um modelo com esse PN."
 );
 
 return;
