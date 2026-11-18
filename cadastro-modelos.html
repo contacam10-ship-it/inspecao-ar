@@ -30,11 +30,10 @@ border:none;
 border-radius:8px;
 text-decoration:none;
 font-weight:bold;
-cursor:pointer;
 }
 
 .container{
-max-width:800px;
+max-width:1000px;
 margin:auto;
 padding:20px;
 }
@@ -68,9 +67,24 @@ font-weight:bold;
 
 .item{
 background:#374151;
-padding:12px;
+padding:15px;
 border-radius:8px;
 margin-bottom:10px;
+}
+
+.excluir{
+margin-top:10px;
+background:#dc2626;
+color:white;
+border:none;
+padding:10px 15px;
+border-radius:8px;
+cursor:pointer;
+}
+
+.info{
+color:#94a3b8;
+margin-bottom:15px;
 }
 
 </style>
@@ -94,16 +108,19 @@ margin-bottom:10px;
 <h2>Novo Modelo</h2>
 
 <label>PN</label>
+
 <input
 id="pn"
 placeholder="86699800">
 
 <label>Descrição</label>
+
 <input
 id="descricao"
 placeholder="Pino de Fixação">
 
 <label>Arquivo GLB</label>
+
 <input
 id="arquivo"
 placeholder="86699800_prt.glb">
@@ -111,7 +128,9 @@ placeholder="86699800_prt.glb">
 <button
 class="salvar"
 onclick="salvarModelo()">
+
 Salvar Modelo
+
 </button>
 
 </div>
@@ -120,101 +139,10 @@ Salvar Modelo
 
 <h2>Modelos Cadastrados</h2>
 
-<div id="lista"></div>
-
+<div
+class="info"
+id="quantidade">
 </div>
 
-</div>
-
-<script>
-
-function carregarModelos(){
-
-const lista =
-JSON.parse(
-localStorage.getItem("modelos")
-|| "[]"
-);
-
-const area =
-document.getElementById("lista");
-
-area.innerHTML = "";
-
-lista.forEach(modelo => {
-
-area.innerHTML += `
-<div class="item">
-
-<b>${modelo.pn}</b><br>
-
-${modelo.descricao}<br>
-
-${modelo.arquivo}
-
-</div>
-`;
-
-});
-
-}
-
-function salvarModelo(){
-
-const pn =
-document.getElementById("pn").value;
-
-const descricao =
-document.getElementById("descricao").value;
-
-const arquivo =
-document.getElementById("arquivo").value;
-
-if(!pn || !arquivo){
-
-alert(
-"Preencha os campos obrigatórios"
-);
-
-return;
-
-}
-
-const lista =
-JSON.parse(
-localStorage.getItem("modelos")
-|| "[]"
-);
-
-lista.push({
-
-pn,
-descricao,
-arquivo
-
-});
-
-localStorage.setItem(
-"modelos",
-JSON.stringify(lista)
-);
-
-document.getElementById("pn").value = "";
-document.getElementById("descricao").value = "";
-document.getElementById("arquivo").value = "";
-
-carregarModelos();
-
-alert(
-"Modelo cadastrado"
-);
-
-}
-
-carregarModelos();
-
-</script>
-
-</body>
-
-</html>
+<div id="lista">
+</div
