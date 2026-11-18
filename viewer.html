@@ -6,17 +6,13 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
-<title>InspectAR - Inspeção</title>
+<title>InspectAR - Seleção de Peça</title>
 
 <script type="module"
 src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js">
 </script>
 
 <style>
-
-*{
-box-sizing:border-box;
-}
 
 body{
 margin:0;
@@ -26,38 +22,34 @@ font-family:Arial,sans-serif;
 }
 
 .header{
-background:#111827;
 padding:15px;
+background:#111827;
 }
 
 .btn{
 background:#2563eb;
 color:white;
 padding:12px 18px;
-border:none;
-border-radius:8px;
 text-decoration:none;
-cursor:pointer;
+border-radius:8px;
 font-weight:bold;
 }
 
 .container{
-max-width:1400px;
-margin:auto;
 padding:20px;
 }
 
 .lista{
 display:flex;
-flex-wrap:wrap;
 gap:10px;
+flex-wrap:wrap;
 margin-bottom:20px;
 }
 
-.modelo{
+.modelo-btn{
 background:#374151;
-color:white;
 border:none;
+color:white;
 padding:12px 20px;
 border-radius:8px;
 cursor:pointer;
@@ -78,25 +70,18 @@ border-radius:12px;
 
 .info{
 margin-top:20px;
-line-height:1.8;
 }
 
 .inspecionar{
 margin-top:20px;
 background:#16a34a;
 color:white;
-padding:14px 20px;
 border:none;
+padding:15px 20px;
 border-radius:8px;
+cursor:pointer;
 font-size:16px;
 font-weight:bold;
-cursor:pointer;
-}
-
-.erro{
-background:#dc2626;
-padding:15px;
-border-radius:8px;
 }
 
 </style>
@@ -107,7 +92,9 @@ border-radius:8px;
 
 <div class="header">
 
-<a href="/" class="btn">
+<a
+href="/"
+class="btn">
 ← Dashboard
 </a>
 
@@ -120,13 +107,12 @@ border-radius:8px;
 <div
 id="listaModelos"
 class="lista">
-
 </div>
 
 <div class="card">
 
 <h2 id="titulo">
-Selecione uma peça
+Selecione uma Peça
 </h2>
 
 <model-viewer
@@ -152,7 +138,9 @@ auto-rotate>
 <button
 class="inspecionar"
 onclick="iniciarInspecao()">
+
 🔍 Iniciar Inspeção
+
 </button>
 
 </div>
@@ -161,26 +149,16 @@ onclick="iniciarInspecao()">
 
 <script>
 
-let modeloSelecionado = null;
+let modeloAtual = null;
+
+const lista =
+document.getElementById("listaModelos");
 
 const modelos =
 JSON.parse(
-localStorage.getItem("modelos") || "[]"
+localStorage.getItem("modelos")
+|| "[]"
 );
-
-const listaModelos =
-document.getElementById("listaModelos");
-
-if(modelos.length === 0){
-
-listaModelos.innerHTML = `
-<div class="erro">
-Nenhum modelo cadastrado.
-Cadastre modelos primeiro.
-</div>
-`;
-
-}
 
 modelos.forEach(function(modelo){
 
@@ -188,37 +166,40 @@ const botao =
 document.createElement("button");
 
 botao.className =
-"modelo";
+"modelo-btn";
 
-botao.innerHTML =
+botao.innerText =
 modelo.pn;
 
 botao.onclick = function(){
 
-modeloSelecionado =
-modelo;
+modeloAtual = modelo;
 
-document.getElementById("viewer").src =
-"/modelos/" + modelo.arquivo;
-
-document.getElementById("titulo").innerHTML =
+document.getElementById("titulo")
+.innerText =
 modelo.pn;
 
-document.getElementById("pn").innerHTML =
+document.getElementById("pn")
+.innerText =
 modelo.pn;
 
-document.getElementById("descricao").innerHTML =
+document.getElementById("descricao")
+.innerText =
 modelo.descricao;
+
+document.getElementById("viewer")
+.src =
+"/modelos/" + modelo.arquivo;
 
 };
 
-listaModelos.appendChild(botao);
+lista.appendChild(botao);
 
 });
 
 function iniciarInspecao(){
 
-if(modeloSelecionado === null){
+if(modeloAtual === null){
 
 alert(
 "Selecione uma peça primeiro."
@@ -228,15 +209,14 @@ return;
 
 }
 
-localStorage.setItem(
+sessionStorage.setItem(
 "pnSelecionado",
-modeloSelecionado.pn
+modeloAtual.pn
 );
 
-localStorage.setItem(
+sessionStorage.setItem(
 "modeloSelecionado",
-"/modelos/" +
-modeloSelecionado.arquivo
+"/modelos/" + modeloAtual.arquivo
 );
 
 window.location.href =
