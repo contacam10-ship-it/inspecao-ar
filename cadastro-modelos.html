@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>Cadastro de Modelos</title>
+
+<style>
+
+body{
+margin:0;
+background:#0f172a;
+color:white;
+font-family:Arial,sans-serif;
+}
+
+.header{
+padding:15px;
+background:#111827;
+}
+
+.btn{
+background:#2563eb;
+color:white;
+padding:12px 18px;
+border:none;
+border-radius:8px;
+text-decoration:none;
+font-weight:bold;
+cursor:pointer;
+}
+
+.container{
+max-width:800px;
+margin:auto;
+padding:20px;
+}
+
+.card{
+background:#1f2937;
+padding:20px;
+border-radius:12px;
+margin-bottom:20px;
+}
+
+input{
+width:100%;
+padding:12px;
+margin-top:8px;
+margin-bottom:15px;
+border:none;
+border-radius:8px;
+}
+
+.salvar{
+background:#16a34a;
+color:white;
+padding:12px 18px;
+border:none;
+border-radius:8px;
+cursor:pointer;
+font-size:16px;
+font-weight:bold;
+}
+
+.item{
+background:#374151;
+padding:12px;
+border-radius:8px;
+margin-bottom:10px;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="header">
+
+<a href="/" class="btn">
+← Dashboard
+</a>
+
+</div>
+
+<div class="container">
+
+<div class="card">
+
+<h2>Novo Modelo</h2>
+
+<label>PN</label>
+<input
+id="pn"
+placeholder="86699800">
+
+<label>Descrição</label>
+<input
+id="descricao"
+placeholder="Pino de Fixação">
+
+<label>Arquivo GLB</label>
+<input
+id="arquivo"
+placeholder="86699800_prt.glb">
+
+<button
+class="salvar"
+onclick="salvarModelo()">
+Salvar Modelo
+</button>
+
+</div>
+
+<div class="card">
+
+<h2>Modelos Cadastrados</h2>
+
+<div id="lista"></div>
+
+</div>
+
+</div>
+
+<script>
+
+function carregarModelos(){
+
+const lista =
+JSON.parse(
+localStorage.getItem("modelos")
+|| "[]"
+);
+
+const area =
+document.getElementById("lista");
+
+area.innerHTML = "";
+
+lista.forEach(modelo => {
+
+area.innerHTML += `
+<div class="item">
+
+<b>${modelo.pn}</b><br>
+
+${modelo.descricao}<br>
+
+${modelo.arquivo}
+
+</div>
+`;
+
+});
+
+}
+
+function salvarModelo(){
+
+const pn =
+document.getElementById("pn").value;
+
+const descricao =
+document.getElementById("descricao").value;
+
+const arquivo =
+document.getElementById("arquivo").value;
+
+if(!pn || !arquivo){
+
+alert(
+"Preencha os campos obrigatórios"
+);
+
+return;
+
+}
+
+const lista =
+JSON.parse(
+localStorage.getItem("modelos")
+|| "[]"
+);
+
+lista.push({
+
+pn,
+descricao,
+arquivo
+
+});
+
+localStorage.setItem(
+"modelos",
+JSON.stringify(lista)
+);
+
+document.getElementById("pn").value = "";
+document.getElementById("descricao").value = "";
+document.getElementById("arquivo").value = "";
+
+carregarModelos();
+
+alert(
+"Modelo cadastrado"
+);
+
+}
+
+carregarModelos();
+
+</script>
+
+</body>
+
+</html>
