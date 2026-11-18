@@ -20,8 +20,7 @@ font-family:Arial,sans-serif;
 
 body{
 margin:0;
-background:#0f172a;
-color:white;
+background:#0b1736;
 overflow:hidden;
 }
 
@@ -49,8 +48,8 @@ video{
 position:absolute;
 top:0;
 left:0;
-width:100vw;
-height:100vh;
+width:100%;
+height:100%;
 object-fit:cover;
 display:none;
 z-index:1;
@@ -60,12 +59,12 @@ model-viewer{
 position:absolute;
 top:50%;
 left:50%;
-width:100vw;
-height:100vh;
-transform:translate(-50%,-50%);
+width:900px;
+height:650px;
+transform:translate(-50%,-50%) scale(1);
 background:transparent;
+opacity:.75;
 z-index:2;
-pointer-events:auto;
 }
 
 .painel{
@@ -84,10 +83,13 @@ width:320px;
 
 z-index:999;
 
+color:white;
+
 }
 
 .painel h3{
 margin-top:0;
+margin-bottom:15px;
 }
 
 label{
@@ -117,6 +119,12 @@ width:260px;
 
 z-index:999;
 
+color:white;
+
+}
+
+.info h3{
+margin-top:0;
 }
 
 </style>
@@ -131,7 +139,9 @@ z-index:999;
 ← Dashboard
 </a>
 
-<button class="btn" onclick="abrirCamera()">
+<button
+class="btn"
+onclick="abrirCamera()">
 📷 Abrir Câmera
 </button>
 
@@ -147,4 +157,149 @@ playsinline>
 id="modelo"
 src="/modelos/86699800_prt.glb"
 camera-controls
+auto-rotate
 shadow-intensity="1"
+exposure="1.2">
+</model-viewer>
+
+<div class="info">
+
+<h3>Peça Atual</h3>
+
+<p><b>86699800_prt</b></p>
+
+<p>
+Modo:
+<br>
+Overlay CAD
+</p>
+
+<p style="color:#22c55e;">
+✅ Modelo carregado
+</p>
+
+</div>
+
+<div class="painel">
+
+<h3>Alinhamento</h3>
+
+<label>Posição X</label>
+<input
+id="x"
+type="range"
+min="-800"
+max="800"
+value="0">
+
+<label>Posição Y</label>
+<input
+id="y"
+type="range"
+min="-600"
+max="600"
+value="0">
+
+<label>Transparência</label>
+<input
+id="opacity"
+type="range"
+min="10"
+max="100"
+value="75">
+
+<label>Zoom</label>
+<input
+id="zoom"
+type="range"
+min="50"
+max="250"
+value="100">
+
+</div>
+
+<script>
+
+const modelo =
+document.getElementById("modelo");
+
+document
+.getElementById("x")
+.addEventListener("input", atualizar);
+
+document
+.getElementById("y")
+.addEventListener("input", atualizar);
+
+document
+.getElementById("opacity")
+.addEventListener("input", atualizar);
+
+document
+.getElementById("zoom")
+.addEventListener("input", atualizar);
+
+function atualizar(){
+
+const x =
+document.getElementById("x").value;
+
+const y =
+document.getElementById("y").value;
+
+const opacity =
+document.getElementById("opacity").value;
+
+const zoom =
+document.getElementById("zoom").value;
+
+modelo.style.left =
+`calc(50% + ${x}px)`;
+
+modelo.style.top =
+`calc(50% + ${y}px)`;
+
+modelo.style.opacity =
+opacity / 100;
+
+modelo.style.transform =
+`translate(-50%,-50%) scale(${zoom/100})`;
+
+}
+
+async function abrirCamera(){
+
+const video =
+document.getElementById("camera");
+
+try{
+
+const stream =
+await navigator.mediaDevices.getUserMedia({
+video:{
+facingMode:"environment"
+}
+});
+
+video.srcObject =
+stream;
+
+video.style.display =
+"block";
+
+}
+catch(erro){
+
+alert(
+"Não foi possível acessar a câmera."
+);
+
+}
+
+}
+
+</script>
+
+</body>
+
+</html>
