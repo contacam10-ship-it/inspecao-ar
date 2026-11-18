@@ -2,10 +2,11 @@
 <html lang="pt-BR">
 
 <head>
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
-<title>InspectAR - Seleção de Peça</title>
+<title>InspectAR - Inspeção</title>
 
 <script type="module"
 src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js">
@@ -13,45 +14,42 @@ src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js">
 
 <style>
 
-body{
+*{
 margin:0;
-background:#0f172a;
-color:white;
+padding:0;
+box-sizing:border-box;
 font-family:Arial,sans-serif;
 }
 
+body{
+background:#0f172a;
+color:white;
+}
+
 .header{
-padding:15px;
 background:#111827;
+padding:20px;
 }
 
 .btn{
 background:#2563eb;
 color:white;
 padding:12px 18px;
-text-decoration:none;
 border-radius:8px;
+text-decoration:none;
 font-weight:bold;
 }
 
 .container{
 padding:20px;
+max-width:1400px;
+margin:auto;
 }
 
-.lista{
-display:flex;
-gap:10px;
-flex-wrap:wrap;
-margin-bottom:20px;
-}
-
-.modelo-btn{
-background:#374151;
-border:none;
-color:white;
-padding:12px 20px;
-border-radius:8px;
-cursor:pointer;
+.layout{
+display:grid;
+grid-template-columns:300px 1fr;
+gap:20px;
 }
 
 .card{
@@ -60,27 +58,77 @@ padding:20px;
 border-radius:12px;
 }
 
-model-viewer{
+.lista button{
+
 width:100%;
-height:500px;
+
+padding:12px;
+
+margin-bottom:10px;
+
 background:#374151;
+
+border:none;
+
+border-radius:8px;
+
+color:white;
+
+cursor:pointer;
+
+}
+
+model-viewer{
+
+width:100%;
+height:600px;
+
+background:#374151;
+
 border-radius:12px;
+
 }
 
 .info{
+
 margin-top:20px;
+
+line-height:30px;
+
 }
 
 .inspecionar{
+
 margin-top:20px;
+
 background:#16a34a;
+
 color:white;
+
+padding:14px 20px;
+
 border:none;
-padding:15px 20px;
+
 border-radius:8px;
+
 cursor:pointer;
+
 font-size:16px;
+
 font-weight:bold;
+
+}
+
+.erro{
+
+background:#dc2626;
+
+padding:10px;
+
+border-radius:8px;
+
+margin-top:10px;
+
 }
 
 </style>
@@ -92,40 +140,72 @@ font-weight:bold;
 <div class="header">
 
 <a href="/" class="btn">
+
 ← Dashboard
+
 </a>
 
 </div>
 
 <div class="container">
 
+<div class="layout">
+
+<div class="card">
+
 <h2>Modelos Disponíveis</h2>
 
-<div id="listaModelos" class="lista">
+<br>
+
+<div
+id="listaModelos"
+class="lista">
+
+</div>
+
 </div>
 
 <div class="card">
 
 <h2 id="titulo">
-Selecione uma peça
+
+Selecione um modelo
+
 </h2>
+
+<br>
 
 <model-viewer
 id="viewer"
 camera-controls
 auto-rotate>
+
 </model-viewer>
 
 <div class="info">
 
 <p>
+
 <b>PN:</b>
-<span id="pn">-</span>
+
+<span id="pn">
+
+-
+
+</span>
+
 </p>
 
 <p>
+
 <b>Descrição:</b>
-<span id="descricao">-</span>
+
+<span id="descricao">
+
+-
+
+</span>
+
 </p>
 
 </div>
@@ -137,6 +217,13 @@ onclick="iniciarInspecao()">
 🔍 Iniciar Inspeção
 
 </button>
+
+<div
+id="status">
+
+</div>
+
+</div>
 
 </div>
 
@@ -153,34 +240,56 @@ localStorage.getItem("modelos")
 );
 
 const lista =
-document.getElementById("listaModelos");
+document.getElementById(
+"listaModelos"
+);
+
+if(modelos.length === 0){
+
+lista.innerHTML =
+`
+<div class="erro">
+
+Nenhum modelo cadastrado.
+
+</div>
+`;
+
+}
 
 modelos.forEach(function(modelo){
 
 const btn =
 document.createElement("button");
 
-btn.className =
-"modelo-btn";
-
 btn.innerHTML =
 modelo.pn;
 
 btn.onclick = function(){
 
-modeloAtual = modelo;
+modeloAtual =
+modelo;
 
-document.getElementById("viewer").src =
-"/modelos/" + modelo.arquivo;
-
-document.getElementById("titulo").innerHTML =
+document.getElementById(
+"titulo"
+).innerHTML =
 modelo.pn;
 
-document.getElementById("pn").innerHTML =
+document.getElementById(
+"pn"
+).innerHTML =
 modelo.pn;
 
-document.getElementById("descricao").innerHTML =
+document.getElementById(
+"descricao"
+).innerHTML =
 modelo.descricao;
+
+document.getElementById(
+"viewer"
+).src =
+"/modelos/" +
+modelo.arquivo;
 
 };
 
@@ -202,10 +311,14 @@ return;
 
 window.location.href =
 "/ar-viewer.html?pn=" +
-encodeURIComponent(modeloAtual.pn)
+encodeURIComponent(
+modeloAtual.pn
+)
 +
 "&arquivo=" +
-encodeURIComponent(modeloAtual.arquivo);
+encodeURIComponent(
+modeloAtual.arquivo
+);
 
 }
 
