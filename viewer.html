@@ -2,204 +2,124 @@
 <html lang="pt-BR">
 
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>InspectAR Viewer</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <script type="module"
-    src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js">
-  </script>
+<title>InspectAR AR Viewer</title>
 
-  <style>
-    * {
-      box-sizing: border-box;
-    }
+<script type="module"
+src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js">
+</script>
 
-    body {
-      margin: 0;
-      background: #111827;
-      color: white;
-      font-family: Arial, sans-serif;
-    }
+<style>
 
-    .header {
-      padding: 20px;
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-      align-items: center;
-      background: #0f172a;
-      border-bottom: 1px solid #374151;
-    }
+*{
+box-sizing:border-box;
+}
 
-    .btn {
-      background: #2563eb;
-      color: white;
-      border: none;
-      border-radius: 8px;
-      padding: 12px 20px;
-      cursor: pointer;
-      text-decoration: none;
-      font-weight: bold;
-    }
+body{
+margin:0;
+background:#111827;
+color:white;
+font-family:Arial,sans-serif;
+}
 
-    .btn:hover {
-      opacity: 0.9;
-    }
+.header{
+background:#0f172a;
+padding:15px;
+display:flex;
+gap:10px;
+align-items:center;
+flex-wrap:wrap;
+}
 
-    .camera-btn {
-      background: #16a34a;
-    }
+.btn{
+background:#2563eb;
+color:white;
+padding:10px 20px;
+border:none;
+border-radius:8px;
+cursor:pointer;
+text-decoration:none;
+font-weight:bold;
+}
 
-    h1 {
-      text-align: center;
-      margin: 25px 0;
-    }
+.camera-btn{
+background:#16a34a;
+}
 
-    .container {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 20px;
-      justify-content: center;
-      padding: 20px;
-    }
+.container{
+position:relative;
+width:100%;
+height:calc(100vh - 70px);
+overflow:hidden;
+}
 
-    .card {
-      width: 550px;
-      max-width: 95%;
-      background: #1f2937;
-      border-radius: 12px;
-      overflow: hidden;
-      border: 1px solid #374151;
-    }
+video{
+position:absolute;
+top:0;
+left:0;
+width:100%;
+height:100%;
+object-fit:cover;
+display:none;
+background:black;
+}
 
-    .card-title {
-      padding: 12px;
-      background: #374151;
-      font-weight: bold;
-      text-align: center;
-    }
+model-viewer{
+position:absolute;
+top:50%;
+left:50%;
+transform:translate(-50%,-50%);
+width:500px;
+height:500px;
+background:transparent;
+opacity:.7;
+}
 
-    #camera {
-      width: 100%;
-      min-height: 450px;
-      background: black;
-      display: none;
-    }
+.controls{
+position:absolute;
+bottom:20px;
+left:20px;
+background:rgba(0,0,0,.8);
+padding:15px;
+border-radius:12px;
+width:320px;
+z-index:100;
+}
 
-    model-viewer {
-      width: 100%;
-      height: 500px;
-      background: #1f2937;
-    }
+.controls h3{
+margin-top:0;
+}
 
-    .status {
-      margin: 20px auto;
-      width: 90%;
-      max-width: 1100px;
-      background: #1f2937;
-      padding: 15px;
-      border-radius: 10px;
-      text-align: center;
-      border: 1px solid #374151;
-    }
+label{
+display:block;
+margin-top:10px;
+margin-bottom:5px;
+}
 
-    .status-ok {
-      color: #22c55e;
-      font-weight: bold;
-    }
+input{
+width:100%;
+}
 
-    @media(max-width: 900px) {
-      .container {
-        flex-direction: column;
-        align-items: center;
-      }
-    }
-  </style>
+.info{
+position:absolute;
+top:20px;
+right:20px;
+width:280px;
+background:rgba(0,0,0,.8);
+padding:15px;
+border-radius:12px;
+z-index:100;
+}
+
+.status{
+font-weight:bold;
+color:#22c55e;
+}
+
+</style>
+
 </head>
 
 <body>
-
-  <div class="header">
-
-    <a href="/" class="btn">
-      ← Voltar
-    </a>
-
-    <button class="btn camera-btn" onclick="abrirCamera()">
-      📷 Abrir Câmera
-    </button>
-
-  </div>
-
-  <h1>InspectAR 3D Viewer</h1>
-
-  <div class="status">
-    Status: <span class="status-ok">Sistema pronto para inspeção</span>
-  </div>
-
-  <div class="container">
-
-    <div class="card">
-
-      <div class="card-title">
-        Câmera
-      </div>
-
-      <video
-        id="camera"
-        autoplay
-        playsinline>
-      </video>
-
-    </div>
-
-    <div class="card">
-
-      <div class="card-title">
-        Modelo 3D
-      </div>
-
-      <model-viewer
-        src="https://modelviewer.dev/shared-assets/models/Astronaut.glb"
-        camera-controls
-        auto-rotate
-        shadow-intensity="1">
-      </model-viewer>
-
-    </div>
-
-  </div>
-
-  <script>
-
-    async function abrirCamera() {
-
-      const video = document.getElementById('camera');
-
-      try {
-
-        const stream = await navigator.mediaDevices.getUserMedia({
-          video: {
-            facingMode: 'environment'
-          }
-        });
-
-        video.srcObject = stream;
-        video.style.display = 'block';
-
-      } catch (erro) {
-
-        alert('Não foi possível acessar a câmera.');
-
-        console.error(erro);
-
-      }
-
-    }
-
-  </script>
-
-</body>
-
-</html>
