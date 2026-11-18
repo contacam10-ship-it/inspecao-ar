@@ -6,7 +6,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
-<title>InspectAR - Inspeção</title>
+<title>InspectAR - Ambiente AR</title>
 
 <script type="module"
 src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js">
@@ -24,11 +24,14 @@ font-family:Arial,sans-serif;
 body{
 background:#0f172a;
 color:white;
+overflow:hidden;
 }
 
 .header{
 background:#111827;
-padding:20px;
+padding:15px;
+display:flex;
+gap:10px;
 }
 
 .btn{
@@ -38,97 +41,72 @@ padding:12px 18px;
 border-radius:8px;
 text-decoration:none;
 font-weight:bold;
+border:none;
+cursor:pointer;
 }
 
-.container{
-padding:20px;
-max-width:1400px;
-margin:auto;
+.btn-camera{
+background:#16a34a;
 }
 
 .layout{
 display:grid;
-grid-template-columns:300px 1fr;
+grid-template-columns:1fr 320px;
 gap:20px;
-}
-
-.card{
-background:#1f2937;
 padding:20px;
-border-radius:12px;
+height:calc(100vh - 80px);
 }
 
-.lista button{
+.viewer-area{
+position:relative;
+background:#1f2937;
+border-radius:12px;
+overflow:hidden;
+}
 
+video{
+position:absolute;
+top:0;
+left:0;
 width:100%;
-
-padding:12px;
-
-margin-bottom:10px;
-
-background:#374151;
-
-border:none;
-
-border-radius:8px;
-
-color:white;
-
-cursor:pointer;
-
+height:100%;
+object-fit:cover;
+display:none;
+z-index:1;
 }
 
 model-viewer{
-
+position:absolute;
+top:0;
+left:0;
 width:100%;
-height:600px;
+height:100%;
+background:transparent;
+z-index:2;
+opacity:0.8;
+}
 
-background:#374151;
-
+.painel{
+background:#1f2937;
+padding:15px;
 border-radius:12px;
+overflow:auto;
+}
 
+.item{
+background:#374151;
+padding:10px;
+border-radius:8px;
+margin-bottom:10px;
+}
+
+.slider{
+width:100%;
 }
 
 .info{
-
-margin-top:20px;
-
-line-height:30px;
-
-}
-
-.inspecionar{
-
-margin-top:20px;
-
-background:#16a34a;
-
-color:white;
-
-padding:14px 20px;
-
-border:none;
-
-border-radius:8px;
-
-cursor:pointer;
-
-font-size:16px;
-
-font-weight:bold;
-
-}
-
-.erro{
-
-background:#dc2626;
-
-padding:10px;
-
-border-radius:8px;
-
-margin-top:10px;
-
+margin-bottom:20px;
+line-height:28px;
 }
 
 </style>
@@ -139,91 +117,75 @@ margin-top:10px;
 
 <div class="header">
 
-<a href="/" class="btn">
-
-← Dashboard
-
+<a href="/viewer.html" class="btn">
+← Voltar
 </a>
 
-</div>
-
-<div class="container">
-
-<div class="layout">
-
-<div class="card">
-
-<h2>Modelos Disponíveis</h2>
-
-<br>
-
-<div
-id="listaModelos"
-class="lista">
-
-</div>
-
-</div>
-
-<div class="card">
-
-<h2 id="titulo">
-
-Selecione um modelo
-
-</h2>
-
-<br>
-
-<model-viewer
-id="viewer"
-camera-controls
-auto-rotate>
-
-</model-viewer>
-
-<div class="info">
-
-<p>
-
-<b>PN:</b>
-
-<span id="pn">
-
--
-
-</span>
-
-</p>
-
-<p>
-
-<b>Descrição:</b>
-
-<span id="descricao">
-
--
-
-</span>
-
-</p>
-
-</div>
-
 <button
-class="inspecionar"
-onclick="iniciarInspecao()">
+class="btn btn-camera"
+onclick="abrirCamera()">
 
-🔍 Iniciar Inspeção
+📷 Abrir Câmera
 
 </button>
 
-<div
-id="status">
+</div>
+
+<div class="layout">
+
+<div class="viewer-area">
+
+<video
+id="camera"
+autoplay
+playsinline>
+</video>
+
+<model-viewer
+id="modelo"
+camera-controls
+auto-rotate>
+</model-viewer>
 
 </div>
 
+<div class="painel">
+
+<h2>Inspeção</h2>
+
+<div class="info">
+
+<b>PN:</b>
+
+<span id="pnAtual">
+-
+</span>
+
 </div>
+
+<h3>Características</h3>
+
+<div id="listaCaracteristicas">
+
+Nenhuma característica.
+
+</div>
+
+<hr style="margin:20px 0;">
+
+<h3>Overlay CAD</h3>
+
+<br>
+
+<label>Transparência</label>
+
+<input
+id="opacity"
+class="slider"
+type="range"
+min="10"
+max="100"
+value="80">
 
 </div>
 
@@ -231,96 +193,125 @@ id="status">
 
 <script>
 
-let modeloAtual = null;
-
-const modelos =
-JSON.parse(
-localStorage.getItem("modelos")
-|| "[]"
+const params =
+new URLSearchParams(
+window.location.search
 );
 
-const lista =
+const pn =
+params.get("pn");
+
+const arquivo =
+params.get("arquivo");
+
 document.getElementById(
-"listaModelos"
-);
+"pnAtual"
+).innerHTML =
+pn || "-";
 
-if(modelos.length === 0){
+if(arquivo){
 
-lista.innerHTML =
-`
-<div class="erro">
-
-Nenhum modelo cadastrado.
-
-</div>
-`;
+document.getElementById(
+"modelo"
+).src =
+"/modelos/" + arquivo;
 
 }
 
-modelos.forEach(function(modelo){
+const caracteristicas =
+JSON.parse(
+localStorage.getItem(
+"caracteristicas"
+) || "[]"
+);
 
-const btn =
-document.createElement("button");
-
-btn.innerHTML =
-modelo.pn;
-
-btn.onclick = function(){
-
-modeloAtual =
-modelo;
-
+const area =
 document.getElementById(
-"titulo"
-).innerHTML =
-modelo.pn;
+"listaCaracteristicas"
+);
 
-document.getElementById(
-"pn"
-).innerHTML =
-modelo.pn;
+area.innerHTML = "";
 
-document.getElementById(
-"descricao"
-).innerHTML =
-modelo.descricao;
+const filtradas =
+caracteristicas.filter(
+c => c.pn === pn
+);
 
-document.getElementById(
-"viewer"
-).src =
-"/modelos/" +
-modelo.arquivo;
+if(filtradas.length === 0){
 
-};
+area.innerHTML =
+"Sem características cadastradas.";
 
-lista.appendChild(btn);
+}
+
+filtradas.forEach(item=>{
+
+area.innerHTML += `
+
+<div class="item">
+
+☐ ${item.caracteristica}
+
+<br>
+
+<small>
+${item.tipo}
+</small>
+
+</div>
+
+`;
 
 });
 
-function iniciarInspecao(){
+async function abrirCamera(){
 
-if(!modeloAtual){
+const video =
+document.getElementById(
+"camera"
+);
+
+try{
+
+const stream =
+await navigator.mediaDevices
+.getUserMedia({
+
+video:{
+facingMode:"environment"
+}
+
+});
+
+video.srcObject =
+stream;
+
+video.style.display =
+"block";
+
+}
+catch(e){
 
 alert(
-"Selecione uma peça primeiro."
-);
-
-return;
-
-}
-
-window.location.href =
-"/ar-viewer.html?pn=" +
-encodeURIComponent(
-modeloAtual.pn
-)
-+
-"&arquivo=" +
-encodeURIComponent(
-modeloAtual.arquivo
+"Não foi possível acessar a câmera."
 );
 
 }
+
+}
+
+document
+.getElementById("opacity")
+.addEventListener(
+"input",
+function(){
+
+document
+.getElementById("modelo")
+.style.opacity =
+this.value / 100;
+
+});
 
 </script>
 
