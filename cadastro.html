@@ -1,0 +1,711 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>InspectAR - Cadastros</title>
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:'Segoe UI',sans-serif;
+}
+
+body{
+background:#0b1220;
+color:white;
+min-height:100vh;
+}
+
+.header{
+background:#111827;
+padding:20px;
+display:flex;
+justify-content:space-between;
+align-items:center;
+}
+
+.logo{
+font-size:24px;
+font-weight:700;
+}
+
+.btn{
+background:#2563eb;
+color:white;
+text-decoration:none;
+padding:12px 18px;
+border-radius:10px;
+font-weight:600;
+}
+
+.container{
+max-width:1200px;
+margin:auto;
+padding:20px;
+}
+
+.tabs{
+display:flex;
+gap:10px;
+margin-bottom:20px;
+flex-wrap:wrap;
+}
+
+.tab{
+
+background:#111827;
+border:1px solid #1f2937;
+color:white;
+padding:12px 20px;
+border-radius:10px;
+cursor:pointer;
+
+}
+
+.tab.active{
+background:#2563eb;
+}
+
+.content{
+display:none;
+}
+
+.content.active{
+display:block;
+}
+
+.layout{
+display:grid;
+grid-template-columns:350px 1fr;
+gap:20px;
+}
+
+.card{
+
+background:#111827;
+border:1px solid #1f2937;
+border-radius:16px;
+padding:20px;
+
+}
+
+.card h2{
+margin-bottom:15px;
+}
+
+label{
+display:block;
+margin-top:12px;
+margin-bottom:6px;
+}
+
+input,
+select,
+textarea{
+
+width:100%;
+padding:12px;
+
+border:none;
+border-radius:10px;
+
+}
+
+textarea{
+height:100px;
+resize:vertical;
+}
+
+.salvar{
+
+margin-top:20px;
+
+width:100%;
+
+background:#16a34a;
+
+color:white;
+
+border:none;
+
+padding:14px;
+
+border-radius:10px;
+
+font-weight:bold;
+
+cursor:pointer;
+
+}
+
+.lista-item{
+
+background:#1f2937;
+
+padding:15px;
+
+border-radius:10px;
+
+margin-bottom:10px;
+
+}
+
+.excluir{
+
+margin-top:10px;
+
+background:#dc2626;
+
+border:none;
+
+color:white;
+
+padding:10px 14px;
+
+border-radius:8px;
+
+cursor:pointer;
+
+}
+
+.info{
+
+margin-bottom:15px;
+
+color:#cbd5e1;
+
+}
+
+.grid{
+
+display:grid;
+
+grid-template-columns:1fr 1fr;
+
+gap:10px;
+
+}
+
+@media(max-width:900px){
+
+.layout{
+grid-template-columns:1fr;
+}
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="header">
+
+<div class="logo">
+InspectAR
+</div>
+
+<a href="/" class="btn">
+← Dashboard
+</a>
+
+</div>
+
+<div class="container">
+
+<div class="tabs">
+
+<button
+class="tab active"
+onclick="abrirAba('modelos')">
+
+📦 Modelos
+
+</button>
+
+<button
+class="tab"
+onclick="abrirAba('caracteristicas')">
+
+📋 Características
+
+</button>
+
+</div>
+
+<!-- MODELOS -->
+
+<div
+id="modelos"
+class="content active">
+
+<div class="layout">
+
+<div class="card">
+
+<h2>Novo Modelo</h2>
+
+<label>PN</label>
+
+<input
+id="pnModelo"
+placeholder="86699800">
+
+<label>Descrição</label>
+
+<input
+id="descricaoModelo"
+placeholder="Pino de Fixação">
+
+<label>Arquivo GLB</label>
+
+<input
+id="arquivoModelo"
+placeholder="86699800_prt.glb">
+
+<button
+class="salvar"
+onclick="salvarModelo()">
+
+Salvar Modelo
+
+</button>
+
+</div>
+
+<div class="card">
+
+<h2>Modelos Cadastrados</h2>
+
+<div
+id="totalModelos"
+class="info">
+
+</div>
+
+<div id="listaModelos">
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+<!-- CARACTERISTICAS -->
+
+<div
+id="caracteristicas"
+class="content">
+
+<div class="layout">
+
+<div class="card">
+
+<h2>Nova Característica</h2>
+
+<label>PN</label>
+
+<input
+id="pnCaracteristica"
+placeholder="86699800">
+
+<label>Característica</label>
+
+<input
+id="nomeCaracteristica"
+placeholder="Furo Principal">
+
+<label>Tipo</label>
+
+<select id="tipoCaracteristica">
+
+<option>FURO</option>
+<option>COMPONENTE</option>
+<option>DIMENSAO</option>
+
+</select>
+
+<div class="grid">
+
+<div>
+
+<label>X</label>
+
+<input
+id="posx"
+type="number"
+value="0">
+
+</div>
+
+<div>
+
+<label>Y</label>
+
+<input
+id="posy"
+type="number"
+value="0">
+
+</div>
+
+</div>
+
+<label>Tolerância</label>
+
+<input
+id="tolerancia"
+type="number"
+step="0.01"
+value="0.20">
+
+<label>Critério</label>
+
+<textarea
+id="criterio"></textarea>
+
+<button
+class="salvar"
+onclick="salvarCaracteristica()">
+
+Salvar Característica
+
+</button>
+
+</div>
+
+<div class="card">
+
+<h2>Características Cadastradas</h2>
+
+<div
+id="totalCaracteristicas"
+class="info">
+
+</div>
+
+<div id="listaCaracteristicas">
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+<script>
+
+function abrirAba(nome){
+
+document
+.querySelectorAll(".content")
+.forEach(el=>{
+el.classList.remove("active");
+});
+
+document
+.querySelectorAll(".tab")
+.forEach(el=>{
+el.classList.remove("active");
+});
+
+document
+.getElementById(nome)
+.classList.add("active");
+
+event.target.classList.add("active");
+
+}
+
+function carregarModelos(){
+
+const modelos =
+JSON.parse(
+localStorage.getItem("modelos")
+|| "[]"
+);
+
+document.getElementById(
+"totalModelos"
+).innerHTML =
+"Total: " + modelos.length;
+
+const area =
+document.getElementById(
+"listaModelos"
+);
+
+area.innerHTML = "";
+
+modelos.forEach((modelo,index)=>{
+
+area.innerHTML += `
+
+<div class="lista-item">
+
+<b>PN:</b> ${modelo.pn}
+
+<br><br>
+
+<b>Descrição:</b>
+${modelo.descricao}
+
+<br><br>
+
+<b>Arquivo:</b>
+${modelo.arquivo}
+
+<br>
+
+<button
+class="excluir"
+onclick="excluirModelo(${index})">
+
+🗑 Excluir
+
+</button>
+
+</div>
+
+`;
+
+});
+
+}
+
+function salvarModelo(){
+
+const pn =
+document.getElementById("pnModelo").value.trim();
+
+const descricao =
+document.getElementById("descricaoModelo").value.trim();
+
+const arquivo =
+document.getElementById("arquivoModelo").value.trim();
+
+if(!pn || !arquivo){
+
+alert(
+"Preencha PN e Arquivo."
+);
+
+return;
+
+}
+
+const modelos =
+JSON.parse(
+localStorage.getItem("modelos")
+|| "[]"
+);
+
+const existe =
+modelos.find(
+m => m.pn === pn
+);
+
+if(existe){
+
+alert(
+"PN já cadastrado."
+);
+
+return;
+
+}
+
+modelos.push({
+
+pn,
+descricao,
+arquivo
+
+});
+
+localStorage.setItem(
+"modelos",
+JSON.stringify(modelos)
+);
+
+carregarModelos();
+
+}
+
+function excluirModelo(index){
+
+const modelos =
+JSON.parse(
+localStorage.getItem("modelos")
+|| "[]"
+);
+
+modelos.splice(index,1);
+
+localStorage.setItem(
+"modelos",
+JSON.stringify(modelos)
+);
+
+carregarModelos();
+
+}
+
+function carregarCaracteristicas(){
+
+const lista =
+JSON.parse(
+localStorage.getItem("caracteristicas")
+|| "[]"
+);
+
+document.getElementById(
+"totalCaracteristicas"
+).innerHTML =
+"Total: " + lista.length;
+
+const area =
+document.getElementById(
+"listaCaracteristicas"
+);
+
+area.innerHTML = "";
+
+lista.forEach((item,index)=>{
+
+area.innerHTML += `
+
+<div class="lista-item">
+
+<b>PN:</b>
+${item.pn}
+
+<br><br>
+
+<b>Característica:</b>
+${item.caracteristica}
+
+<br>
+
+<b>Tipo:</b>
+${item.tipo}
+
+<br>
+
+<b>X:</b>
+${item.posx}
+
+<br>
+
+<b>Y:</b>
+${item.posy}
+
+<br>
+
+<b>Tolerância:</b>
+±${item.tolerancia}
+
+<br><br>
+
+${item.criterio}
+
+<br>
+
+<button
+class="excluir"
+onclick="excluirCaracteristica(${index})">
+
+🗑 Excluir
+
+</button>
+
+</div>
+
+`;
+
+});
+
+}
+
+function salvarCaracteristica(){
+
+const caracteristicas =
+JSON.parse(
+localStorage.getItem("caracteristicas")
+|| "[]"
+);
+
+caracteristicas.push({
+
+pn:
+document.getElementById("pnCaracteristica").value,
+
+caracteristica:
+document.getElementById("nomeCaracteristica").value,
+
+tipo:
+document.getElementById("tipoCaracteristica").value,
+
+posx:
+document.getElementById("posx").value,
+
+posy:
+document.getElementById("posy").value,
+
+tolerancia:
+document.getElementById("tolerancia").value,
+
+criterio:
+document.getElementById("criterio").value
+
+});
+
+localStorage.setItem(
+"caracteristicas",
+JSON.stringify(caracteristicas)
+);
+
+carregarCaracteristicas();
+
+}
+
+function excluirCaracteristica(index){
+
+const caracteristicas =
+JSON.parse(
+localStorage.getItem("caracteristicas")
+|| "[]"
+);
+
+caracteristicas.splice(index,1);
+
+localStorage.setItem(
+"caracteristicas",
+JSON.stringify(caracteristicas)
+);
+
+carregarCaracteristicas();
+
+}
+
+carregarModelos();
+carregarCaracteristicas();
+
+</script>
+
+</body>
+
+</html>
