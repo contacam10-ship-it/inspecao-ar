@@ -14,20 +14,15 @@
     .logo{font-size:20px;font-weight:700}.home{width:42px;height:42px;display:grid;place-items:center;text-decoration:none;background:var(--blue);border-radius:10px;color:#fff;font-size:20px}
     .main{min-height:calc(100vh - 60px);min-height:calc(100dvh - 60px);display:grid;grid-template-columns:minmax(0,1fr) 340px}
     .ar-container{position:relative;min-height:520px;background:#020617;overflow:hidden}
-    #camera{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:1;display:none}
-    #camera.active{display:block}
+    #camera{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:1;display:none}#camera.active{display:block}
     #modelo{position:absolute;inset:0;width:100%;height:100%;z-index:2;background:transparent;--poster-color:transparent}
     .stage-message{position:absolute;z-index:3;top:14px;left:14px;max-width:min(500px,calc(100% - 28px));padding:10px 12px;border-radius:10px;background:#0b1220d9;color:#e2e8f0;font-size:13px;pointer-events:none}
     .ar-hint{position:absolute;z-index:3;bottom:14px;left:14px;padding:8px 10px;border-radius:9px;background:#0b1220d9;color:#cbd5e1;font-size:12px;pointer-events:none}
     .ar-button{border:0;border-radius:10px;background:var(--blue);color:#fff;padding:12px 16px;font-weight:700;cursor:pointer;margin:12px}
-    .sidebar{background:var(--panel);padding:15px;overflow-y:auto;border-left:1px solid #1f2937}
-    .card{background:var(--card);padding:15px;border-radius:12px;margin-bottom:15px}
-    .card-title{font-size:12px;color:var(--muted);margin-bottom:10px;text-transform:uppercase;letter-spacing:.04em}
-    .pn{font-size:20px;font-weight:700;overflow-wrap:anywhere}
-    .feature-list{display:grid;gap:8px}.feature{width:100%;border:1px solid transparent;background:#0f172a;color:#fff;text-align:left;padding:11px;border-radius:10px;cursor:pointer}
-    .feature:hover,.feature[aria-pressed="true"]{background:#1d4ed8;border-color:#60a5fa}
-    .details{font-size:14px;line-height:1.55;overflow-wrap:anywhere}.details p{margin:8px 0}.muted{color:var(--muted)}
-    label{display:block;margin:10px 0 5px;font-size:13px}input[type=range]{width:100%;accent-color:#60a5fa}
+    .sidebar{background:var(--panel);padding:15px;overflow-y:auto;border-left:1px solid #1f2937}.card{background:var(--card);padding:15px;border-radius:12px;margin-bottom:15px}
+    .card-title{font-size:12px;color:var(--muted);margin-bottom:10px;text-transform:uppercase;letter-spacing:.04em}.pn{font-size:20px;font-weight:700;overflow-wrap:anywhere}
+    .feature-list{display:grid;gap:8px}.feature{width:100%;border:1px solid transparent;background:#0f172a;color:#fff;text-align:left;padding:11px;border-radius:10px;cursor:pointer}.feature:hover,.feature[aria-pressed="true"]{background:#1d4ed8;border-color:#60a5fa}
+    .details{font-size:14px;line-height:1.55;overflow-wrap:anywhere}.details p{margin:8px 0}.muted{color:var(--muted)}label{display:block;margin:10px 0 5px;font-size:13px}input[type=range]{width:100%;accent-color:#60a5fa}
     .actions{display:grid;grid-template-columns:1fr 1fr;gap:8px}.btn{width:100%;padding:12px 10px;border:0;border-radius:10px;color:#fff;font-weight:700;cursor:pointer;margin-top:8px}.btn:disabled{opacity:.5;cursor:not-allowed}.btn-ok{background:var(--green)}.btn-nok{background:var(--red)}.btn-secondary{background:#334155}.btn-camera{background:var(--blue)}
     .notice{font-size:12px;line-height:1.5;color:#cbd5e1}.status{font-size:13px;line-height:1.45;color:#cbd5e1;min-height:20px}.status[data-kind="error"]{color:#fca5a5}.status[data-kind="success"]{color:#86efac}
     @media(max-width:900px){.main{grid-template-columns:1fr}.ar-container{min-height:55vh;min-height:55dvh}.sidebar{border-left:0;border-top:1px solid #1f2937;overflow:visible}}
@@ -35,60 +30,29 @@
   </style>
 </head>
 <body>
-  <header class="header">
-    <div class="logo">InspectAR <span class="muted">/ Inspeção</span></div>
-    <a href="/" class="home" aria-label="Voltar ao início" title="Voltar ao início">⌂</a>
-  </header>
-
+  <header class="header"><div class="logo">InspectAR <span class="muted">/ Inspeção</span></div><a href="/" class="home" aria-label="Voltar ao início" title="Voltar ao início">⌂</a></header>
   <main class="main">
     <section class="ar-container" aria-label="Visualização do modelo e realidade aumentada">
       <video id="camera" autoplay playsinline muted aria-label="Imagem da câmera"></video>
-      <model-viewer id="modelo" camera-controls touch-action="pan-y" shadow-intensity="1" ar ar-modes="webxr scene-viewer quick-look" ar-scale="auto" interaction-prompt="auto" alt="Modelo CAD da peça">
-        <button slot="ar-button" class="ar-button" type="button">📱 Abrir em realidade aumentada</button>
-      </model-viewer>
+      <model-viewer id="modelo" camera-controls touch-action="pan-y" shadow-intensity="1" ar ar-modes="webxr scene-viewer quick-look" ar-scale="auto" interaction-prompt="auto" alt="Modelo CAD da peça"><button slot="ar-button" class="ar-button" type="button">📱 Abrir em realidade aumentada</button></model-viewer>
       <div id="stageMessage" class="stage-message">Selecione uma peça cadastrada para carregar o modelo.</div>
       <div class="ar-hint">RA espacial requer dispositivo compatível e página em HTTPS. Câmera/alinhamento manual é apenas referência visual.</div>
     </section>
-
     <aside class="sidebar">
+      <section class="card"><div class="card-title">Peça em inspeção</div><div id="pnAtual" class="pn">-</div><div id="descricaoAtual" class="muted"></div></section>
+      <section class="card"><div class="card-title">Características</div><div id="listaCaracteristicas" class="feature-list"><span class="muted">Carregando…</span></div></section>
+      <section class="card"><div class="card-title">Critério de inspeção</div><div id="detalhes" class="details muted">Selecione uma característica.</div></section>
       <section class="card">
-        <div class="card-title">Peça em inspeção</div>
-        <div id="pnAtual" class="pn">-</div>
-        <div id="descricaoAtual" class="muted"></div>
-      </section>
-
-      <section class="card">
-        <div class="card-title">Características</div>
-        <div id="listaCaracteristicas" class="feature-list"><span class="muted">Carregando…</span></div>
-      </section>
-
-      <section class="card">
-        <div class="card-title">Critério de inspeção</div>
-        <div id="detalhes" class="details muted">Selecione uma característica.</div>
-      </section>
-
-      <section class="card">
-        <div class="card-title">Sobreposição manual (referência)</div>
-        <p class="notice">Use estes controles somente para comparar visualmente o CAD com a câmera. Eles não fazem rastreamento nem fixam o modelo à peça.</p>
+        <div class="card-title">Sobreposição manual (referência)</div><p class="notice">Use estes controles somente para comparar visualmente o CAD com a câmera. Eles não fazem rastreamento nem fixam o modelo à peça.</p>
         <button id="cameraButton" class="btn btn-camera" type="button">Ativar câmera para comparação</button>
         <label for="opacity">Transparência</label><input id="opacity" type="range" min="10" max="100" value="80">
         <label for="scale">Escala</label><input id="scale" type="range" min="50" max="250" value="100">
         <label for="posx">Posição X</label><input id="posx" type="range" min="-500" max="500" value="0">
         <label for="posy">Posição Y</label><input id="posy" type="range" min="-500" max="500" value="0">
       </section>
-
-      <section class="card">
-        <div class="card-title">Resultado da inspeção</div>
-        <div class="actions">
-          <button id="approveButton" class="btn btn-ok" type="button">✅ Aprovar</button>
-          <button id="rejectButton" class="btn btn-nok" type="button">❌ Rejeitar</button>
-        </div>
-        <button id="exportButton" class="btn btn-secondary" type="button">Exportar registros desta peça</button>
-        <p id="status" class="status" role="status" aria-live="polite">Selecione uma peça e uma característica.</p>
-      </section>
+      <section class="card"><div class="card-title">Resultado da inspeção</div><div class="actions"><button id="approveButton" class="btn btn-ok" type="button">✅ Aprovar</button><button id="rejectButton" class="btn btn-nok" type="button">❌ Rejeitar</button></div><button id="exportButton" class="btn btn-secondary" type="button">Exportar registros desta peça</button><p id="status" class="status" role="status" aria-live="polite">Selecione uma peça e uma característica.</p></section>
     </aside>
   </main>
-
   <script>
     (() => {
       "use strict";
@@ -101,7 +65,6 @@
       let cameraStream = null;
       let selectedModel = null;
       let selectedFeature = null;
-      let featuresForModel = [];
 
       function readArray(key) {
         try {
@@ -112,10 +75,7 @@
           return [];
         }
       }
-      function setStatus(message, kind = "") {
-        status.textContent = message;
-        status.dataset.kind = kind;
-      }
+      function setStatus(message, kind = "") { status.textContent = message; status.dataset.kind = kind; }
       function safeModelFilename(value) {
         if (typeof value !== "string") return "";
         const filename = value.split(/[\\/]/).pop();
@@ -141,12 +101,17 @@
       }
       function loadModel() {
         const models = readArray("modelos");
-        const model = models.find((item) => item && item.pn === requestedPn && (!requestedFile || item.arquivo === requestedFile));
+        // localStorage é isolado por dispositivo/navegador. O link de inspeção também leva PN e arquivo
+        // para permitir abrir o modelo no celular mesmo quando o cadastro não existe nesse aparelho.
+        const savedModel = models.find((item) => item && item.pn === requestedPn && (!requestedFile || item.arquivo === requestedFile));
+        const model = savedModel || (requestedPn ? { pn: requestedPn, arquivo: requestedFile || "", descricao: "" } : null);
         const filename = model && safeModelFilename(model.arquivo);
         if (!model || !filename) {
-          $("stageMessage").textContent = "Peça não encontrada ou arquivo de modelo inválido. Volte ao cadastro e selecione uma peça válida.";
+          $("stageMessage").textContent = requestedPn
+            ? "PN recebido, mas o link não contém um nome de arquivo GLB/GLTF válido. Abra a inspeção pelo cadastro e compartilhe o link completo."
+            : "Nenhum PN foi informado. Abra a peça pelo cadastro ou use um link de inspeção completo.";
           $("pnAtual").textContent = requestedPn || "-";
-          setStatus("Não foi possível carregar a peça. Confira o cadastro do PN e o nome do arquivo GLB/GLTF.", "error");
+          setStatus(requestedPn ? "O PN foi recebido, mas falta o arquivo do modelo no link." : "Sem PN na URL. O cadastro salvo em outro celular/computador não é sincronizado automaticamente.", "error");
           $("approveButton").disabled = true;
           $("rejectButton").disabled = true;
           return;
@@ -155,17 +120,19 @@
         $("pnAtual").textContent = model.pn;
         $("descricaoAtual").textContent = model.descricao || "";
         modelViewer.src = `/modelos/${encodeURIComponent(filename)}`;
-        $("stageMessage").textContent = "Modelo carregado. Use ‘Abrir em realidade aumentada’ em um dispositivo compatível ou ative a câmera para comparação manual.";
-        featuresForModel = readArray("caracteristicas").filter((item) => item && item.pn === model.pn);
+        $("stageMessage").textContent = savedModel
+          ? "Modelo carregado do cadastro deste dispositivo."
+          : "Modelo carregado a partir do link compartilhado. O cadastro e as características ainda não estão sincronizados neste dispositivo.";
+        const features = readArray("caracteristicas").filter((item) => item && item.pn === model.pn);
         const list = $("listaCaracteristicas");
         list.replaceChildren();
-        if (!featuresForModel.length) {
+        if (!features.length) {
           const empty = document.createElement("span");
           empty.className = "muted";
-          empty.textContent = "Sem características cadastradas para este PN.";
+          empty.textContent = "Sem características neste dispositivo. Para registrar resultados, cadastre ou sincronize as características.";
           list.appendChild(empty);
         } else {
-          featuresForModel.forEach((feature) => {
+          features.forEach((feature) => {
             const button = document.createElement("button");
             button.type = "button";
             button.className = "feature";
@@ -175,7 +142,7 @@
             list.appendChild(button);
           });
         }
-        setStatus(featuresForModel.length ? "Selecione uma característica para registrar o resultado." : "Não há características cadastradas; cadastre uma antes de concluir a inspeção.");
+        setStatus(features.length ? "Selecione uma característica para registrar o resultado." : "Peça carregada. Não há características locais para selecionar.");
       }
       async function toggleCamera() {
         if (cameraStream) {
@@ -204,12 +171,9 @@
       }
       function updateOverlay() {
         modelViewer.style.opacity = String(Number($("opacity").value) / 100);
-        const scale = Number($("scale").value) / 100;
-        const x = Number($("posx").value);
-        const y = Number($("posy").value);
-        modelViewer.style.left = `calc(50% + ${x}px)`;
-        modelViewer.style.top = `calc(50% + ${y}px)`;
-        modelViewer.style.transform = `translate(-50%, -50%) scale(${scale})`;
+        modelViewer.style.transform = `translate(-50%, -50%) scale(${Number($("scale").value) / 100})`;
+        modelViewer.style.left = `calc(50% + ${Number($("posx").value)}px)`;
+        modelViewer.style.top = `calc(50% + ${Number($("posy").value)}px)`;
       }
       function recordResult(outcome) {
         if (!selectedModel) return setStatus("Selecione uma peça cadastrada primeiro.", "error");
@@ -217,14 +181,10 @@
         const records = readArray("inspecoes");
         const entry = {
           id: (window.crypto && crypto.randomUUID) ? crypto.randomUUID() : `${Date.now()}-${Math.random().toString(16).slice(2)}`,
-          pn: selectedModel.pn,
-          arquivo: selectedModel.arquivo,
-          caracteristica: selectedFeature.caracteristica || "",
-          tipo: selectedFeature.tipo || "",
-          tolerancia: selectedFeature.tolerancia || "",
-          criterio: selectedFeature.criterio || "",
-          resultado: outcome,
-          data: new Date().toISOString(),
+          pn: selectedModel.pn, arquivo: selectedModel.arquivo,
+          caracteristica: selectedFeature.caracteristica || "", tipo: selectedFeature.tipo || "",
+          tolerancia: selectedFeature.tolerancia || "", criterio: selectedFeature.criterio || "",
+          resultado: outcome, data: new Date().toISOString(),
           alinhamentoManual: { opacidade: Number($("opacity").value), escala: Number($("scale").value), x: Number($("posx").value), y: Number($("posy").value) }
         };
         records.push(entry);
@@ -249,7 +209,6 @@
         URL.revokeObjectURL(url);
         setStatus(`${records.length} registro(s) exportado(s).`, "success");
       }
-
       $("cameraButton").addEventListener("click", toggleCamera);
       $("approveButton").addEventListener("click", () => recordResult("APROVADO"));
       $("rejectButton").addEventListener("click", () => recordResult("REJEITADO"));
