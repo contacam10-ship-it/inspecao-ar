@@ -21,9 +21,9 @@
     .ar-button{border:0;border-radius:10px;background:var(--blue);color:#fff;padding:12px 16px;font-weight:700;cursor:pointer;margin:12px}
     .sidebar{background:var(--panel);padding:15px;overflow-y:auto;border-left:1px solid #1f2937}.card{background:var(--card);padding:15px;border-radius:12px;margin-bottom:15px}
     .card-title{font-size:12px;color:var(--muted);margin-bottom:10px;text-transform:uppercase;letter-spacing:.04em}.pn{font-size:20px;font-weight:700;overflow-wrap:anywhere}
-    .feature-list{display:grid;gap:8px}.feature{width:100%;border:1px solid transparent;background:#0f172a;color:#fff;text-align:left;padding:11px;border-radius:10px;cursor:pointer}.feature:hover,.feature[aria-pressed="true"]{background:#1d4ed8;border-color:#60a5fa}
-    .details{font-size:14px;line-height:1.55;overflow-wrap:anywhere}.details p{margin:8px 0}.muted{color:var(--muted)}label{display:block;margin:10px 0 5px;font-size:13px}input[type=range]{width:100%;accent-color:#60a5fa}
-    .actions{display:grid;grid-template-columns:1fr 1fr;gap:8px}.btn{width:100%;padding:12px 10px;border:0;border-radius:10px;color:#fff;font-weight:700;cursor:pointer;margin-top:8px}.btn:disabled{opacity:.5;cursor:not-allowed}.btn-ok{background:var(--green)}.btn-nok{background:var(--red)}.btn-secondary{background:#334155}.btn-camera{background:var(--blue)}
+    .feature-list{display:grid;gap:8px}.feature{width:100%;border:1px solid transparent;background:#0f172a;color:#fff;text-align:left;padding:11px;border-radius:10px;cursor:pointer}.feature:hover,.feature[aria-pressed="true"]{border-color:#60a5fa;background:#172554}
+    .details{font-size:14px;line-height:1.55;overflow-wrap:anywhere}.details p{margin:8px 0}.muted{color:var(--muted)}label{display:block;margin:10px 0 5px;font-size:13px}input[type=range]{width:100%;accent-color:var(--blue)}
+    .actions{display:grid;grid-template-columns:1fr 1fr;gap:8px}.btn{width:100%;padding:12px 10px;border:0;border-radius:10px;color:#fff;font-weight:700;cursor:pointer;margin-top:8px}.btn:disabled{opacity:.55;cursor:not-allowed}.btn-camera{background:#334155}.btn-ok{background:var(--green)}.btn-reject{background:var(--red)}.btn-export{grid-column:1/-1;background:#475569}
     .notice{font-size:12px;line-height:1.5;color:#cbd5e1}.status{font-size:13px;line-height:1.45;color:#cbd5e1;min-height:20px}.status[data-kind="error"]{color:#fca5a5}.status[data-kind="success"]{color:#86efac}
     @media(max-width:900px){.main{grid-template-columns:1fr}.ar-container{min-height:55vh;min-height:55dvh}.sidebar{border-left:0;border-top:1px solid #1f2937;overflow:visible}}
     @media(max-width:480px){.header{padding:0 14px}.main{min-height:0}.ar-container{min-height:48vh;min-height:48dvh}.sidebar{padding:12px}.actions{grid-template-columns:1fr 1fr}}
@@ -34,7 +34,7 @@
   <main class="main">
     <section class="ar-container" aria-label="Visualização do modelo e realidade aumentada">
       <video id="camera" autoplay playsinline muted aria-label="Imagem da câmera"></video>
-      <model-viewer id="modelo" camera-controls touch-action="pan-y" shadow-intensity="1" ar ar-modes="webxr scene-viewer quick-look" ar-scale="auto" interaction-prompt="auto" alt="Modelo CAD da peça"><button slot="ar-button" class="ar-button" type="button">📱 Abrir em realidade aumentada</button></model-viewer>
+      <model-viewer id="modelo" camera-controls touch-action="pan-y" shadow-intensity="1" ar ar-modes="webxr scene-viewer quick-look" ar-scale="auto" interaction-prompt="auto" alt="Modelo CAD da peça"></model-viewer>
       <div id="stageMessage" class="stage-message">Selecione uma peça cadastrada para carregar o modelo.</div>
       <div class="ar-hint">RA espacial requer dispositivo compatível e página em HTTPS. Câmera/alinhamento manual é apenas referência visual.</div>
     </section>
@@ -43,14 +43,14 @@
       <section class="card"><div class="card-title">Características</div><div id="listaCaracteristicas" class="feature-list"><span class="muted">Carregando…</span></div></section>
       <section class="card"><div class="card-title">Critério de inspeção</div><div id="detalhes" class="details muted">Selecione uma característica.</div></section>
       <section class="card">
-        <div class="card-title">Sobreposição manual (referência)</div><p class="notice">Use estes controles somente para comparar visualmente o CAD com a câmera. Eles não fazem rastreamento nem fixam o modelo à peça.</p>
+        <div class="card-title">Sobreposição manual (referência)</div><p class="notice">Use estes controles somente para comparar visualmente o CAD com a câmera. Eles não fazem rastreamento nem medição.</p>
         <button id="cameraButton" class="btn btn-camera" type="button">Ativar câmera para comparação</button>
         <label for="opacity">Transparência</label><input id="opacity" type="range" min="10" max="100" value="80">
         <label for="scale">Escala</label><input id="scale" type="range" min="50" max="250" value="100">
         <label for="posx">Posição X</label><input id="posx" type="range" min="-500" max="500" value="0">
         <label for="posy">Posição Y</label><input id="posy" type="range" min="-500" max="500" value="0">
       </section>
-      <section class="card"><div class="card-title">Resultado da inspeção</div><div class="actions"><button id="approveButton" class="btn btn-ok" type="button">✅ Aprovar</button><button id="rejectButton" class="btn btn-nok" type="button">❌ Rejeitar</button></div><button id="exportButton" class="btn btn-secondary" type="button">Exportar registros desta peça</button><p id="status" class="status" role="status" aria-live="polite">Selecione uma peça e uma característica.</p></section>
+      <section class="card"><div class="card-title">Resultado da inspeção</div><div class="actions"><button id="approveButton" class="btn btn-ok" type="button">✅ Aprovar</button><button id="rejectButton" class="btn btn-reject" type="button">❌ Rejeitar</button><button id="exportButton" class="btn btn-export" type="button">Exportar registros</button></div><div id="status" class="status" role="status" aria-live="polite"></div></section>
     </aside>
   </main>
   <script>
@@ -101,8 +101,6 @@
       }
       function loadModel() {
         const models = readArray("modelos");
-        // localStorage é isolado por dispositivo/navegador. O link de inspeção também leva PN e arquivo
-        // para permitir abrir o modelo no celular mesmo quando o cadastro não existe nesse aparelho.
         const savedModel = models.find((item) => item && item.pn === requestedPn && (!requestedFile || item.arquivo === requestedFile));
         const model = savedModel || (requestedPn ? { pn: requestedPn, arquivo: requestedFile || "", descricao: "" } : null);
         const filename = model && safeModelFilename(model.arquivo);
@@ -119,10 +117,10 @@
         selectedModel = model;
         $("pnAtual").textContent = model.pn;
         $("descricaoAtual").textContent = model.descricao || "";
-        modelViewer.src = `/modelos/${encodeURIComponent(filename)}`;
+        modelViewer.src = `https://raw.githubusercontent.com/contacam10-ship-it/inspecao-ar/main/modelos/${encodeURIComponent(filename)}`;
         $("stageMessage").textContent = savedModel
-          ? "Modelo carregado do cadastro deste dispositivo."
-          : "Modelo carregado a partir do link compartilhado. O cadastro e as características ainda não estão sincronizados neste dispositivo.";
+          ? "Modelo carregado do GitHub a partir do cadastro deste dispositivo."
+          : "Modelo carregado diretamente do GitHub. O cadastro e as características ainda não estão sincronizados neste dispositivo.";
         const features = readArray("caracteristicas").filter((item) => item && item.pn === model.pn);
         const list = $("listaCaracteristicas");
         list.replaceChildren();
@@ -214,7 +212,7 @@
       $("rejectButton").addEventListener("click", () => recordResult("REJEITADO"));
       $("exportButton").addEventListener("click", exportRecords);
       ["opacity", "scale", "posx", "posy"].forEach((id) => $(id).addEventListener("input", updateOverlay));
-      modelViewer.addEventListener("error", () => setStatus("Erro ao carregar o modelo 3D. Confirme se o arquivo existe em /modelos/ e é GLB/GLTF válido.", "error"));
+      modelViewer.addEventListener("error", () => setStatus("Erro ao carregar o modelo 3D. Confirme se o arquivo existe no repositório GitHub na pasta modelos/ e é um GLB/GLTF válido.", "error"));
       window.addEventListener("pagehide", () => cameraStream?.getTracks().forEach((track) => track.stop()));
       updateOverlay();
       loadModel();
