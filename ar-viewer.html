@@ -29,50 +29,57 @@ overflow:hidden;
 }
 
 .header{
-height:70px;
+
+height:60px;
 background:#111827;
-border-bottom:1px solid #1f2937;
 
 display:flex;
 align-items:center;
 justify-content:space-between;
 
 padding:0 20px;
+
+border-bottom:1px solid #1f2937;
+
 }
 
 .logo{
-font-size:22px;
-font-weight:700;
+font-size:20px;
+font-weight:600;
 }
 
 .home{
-width:48px;
-height:48px;
+
+width:42px;
+height:42px;
 
 display:flex;
 align-items:center;
 justify-content:center;
 
-background:#2563eb;
-
-color:white;
 text-decoration:none;
 
-border-radius:12px;
+background:#2563eb;
 
-font-size:22px;
+border-radius:10px;
+
+color:white;
+
+font-size:20px;
+
 }
 
 .main{
 
-display:grid;
-grid-template-columns:1fr 320px;
+height:calc(100vh - 60px);
 
-height:calc(100vh - 70px);
+display:grid;
+
+grid-template-columns:1fr 320px;
 
 }
 
-.ar-area{
+.ar-container{
 
 position:relative;
 
@@ -112,9 +119,9 @@ background:transparent;
 
 z-index:2;
 
-pointer-events:none;
+opacity:0.8;
 
-opacity:.8;
+pointer-events:none;
 
 }
 
@@ -154,13 +161,6 @@ text-transform:uppercase;
 
 }
 
-.pn{
-
-font-size:18px;
-font-weight:600;
-
-}
-
 .feature{
 
 background:#0f172a;
@@ -173,8 +173,6 @@ margin-bottom:8px;
 
 cursor:pointer;
 
-transition:.2s;
-
 }
 
 .feature:hover{
@@ -182,22 +180,26 @@ background:#2563eb;
 }
 
 .details{
-line-height:24px;
+
 font-size:14px;
+
+line-height:24px;
+
 }
 
-.controls label{
+label{
 
 display:block;
 
-margin-top:12px;
+margin-top:10px;
+
 margin-bottom:5px;
 
 font-size:13px;
 
 }
 
-.controls input{
+input[type=range]{
 width:100%;
 }
 
@@ -211,42 +213,48 @@ border:none;
 
 border-radius:10px;
 
-cursor:pointer;
-
 font-weight:bold;
+
+cursor:pointer;
 
 margin-top:10px;
 
 }
 
-.btn-aprovar{
+.btn-ok{
 background:#16a34a;
 color:white;
 }
 
-.btn-rejeitar{
+.btn-nok{
 background:#dc2626;
 color:white;
 }
 
-@media(max-width:1000px){
+@media(max-width:900px){
 
 body{
 overflow:auto;
 }
 
 .main{
+
 grid-template-columns:1fr;
+
 height:auto;
+
 }
 
-.ar-area{
-height:65vh;
+.ar-container{
+height:60vh;
 }
 
 .sidebar{
+
 border-left:none;
+
 border-top:1px solid #1f2937;
+
 }
 
 }
@@ -260,7 +268,7 @@ border-top:1px solid #1f2937;
 <div class="header">
 
 <div class="logo">
-InspectAR
+InspectAR AR
 </div>
 
 <a href="/" class="home">
@@ -271,7 +279,7 @@ InspectAR
 
 <div class="main">
 
-<div class="ar-area">
+<div class="ar-container">
 
 <video
 id="camera"
@@ -293,15 +301,11 @@ auto-rotate>
 <div class="card">
 
 <div class="card-title">
-PEÇA EM INSPEÇÃO
+PN EM INSPEÇÃO
 </div>
 
-<div
-id="pnAtual"
-class="pn">
-
+<div id="pnAtual">
 -
-
 </div>
 
 </div>
@@ -310,12 +314,11 @@ class="pn">
 
 <div class="card-title">
 CARACTERÍSTICAS
-
 </div>
 
-<div id="features">
+<div id="listaCaracteristicas">
 
-Sem características cadastradas.
+Sem características.
 
 </div>
 
@@ -324,11 +327,11 @@ Sem características cadastradas.
 <div class="card">
 
 <div class="card-title">
-CRITÉRIO DE INSPEÇÃO
+CRITÉRIO
 </div>
 
 <div
-id="details"
+id="detalhes"
 class="details">
 
 Selecione uma característica.
@@ -337,12 +340,10 @@ Selecione uma característica.
 
 </div>
 
-<div class="card controls">
+<div class="card">
 
 <div class="card-title">
-
 ALINHAMENTO CAD
-
 </div>
 
 <label>Transparência</label>
@@ -381,12 +382,18 @@ min="-500"
 max="500"
 value="0">
 
-<button class="btn btn-aprovar">
-✅ Aprovar
+</div>
+
+<div class="card">
+
+<button
+class="btn btn-ok">
+✅ APROVAR
 </button>
 
-<button class="btn btn-rejeitar">
-❌ Rejeitar
+<button
+class="btn btn-nok">
+❌ REJEITAR
 </button>
 
 </div>
@@ -425,8 +432,6 @@ modelo.src =
 
 }
 
-/* CARREGA CARACTERÍSTICAS */
-
 const caracteristicas =
 JSON.parse(
 localStorage.getItem(
@@ -434,31 +439,31 @@ localStorage.getItem(
 ) || "[]"
 );
 
-const area =
-document.getElementById(
-"features"
-);
-
-const details =
-document.getElementById(
-"details"
-);
-
-area.innerHTML = "";
-
 const lista =
-caracteristicas.filter(
-item => item.pn === pn
+document.getElementById(
+"listaCaracteristicas"
 );
 
-if(lista.length === 0){
+const detalhes =
+document.getElementById(
+"detalhes"
+);
 
-area.innerHTML =
+lista.innerHTML = "";
+
+const filtradas =
+caracteristicas.filter(
+c => c.pn === pn
+);
+
+if(filtradas.length === 0){
+
+lista.innerHTML =
 "Sem características cadastradas.";
 
 }
 
-lista.forEach(item=>{
+filtradas.forEach(item=>{
 
 const div =
 document.createElement("div");
@@ -466,42 +471,38 @@ document.createElement("div");
 div.className =
 "feature";
 
-div.innerHTML =
+div.textContent =
 item.caracteristica;
 
-div.onclick = function(){
+div.onclick = () => {
 
-details.innerHTML = `
+detalhes.innerHTML =
 
-<b>Tipo</b><br>
-${item.tipo || "-"}
+`<b>Tipo:</b><br>${item.tipo || "-"}
 
 <br><br>
 
-<b>Tolerância</b><br>
+<b>Tolerância:</b><br>
 ±${item.tolerancia || "-"}
 
 <br><br>
 
-<b>Critério</b><br>
-${item.criterio || "-"}
-
-`;
+<b>Critério:</b><br>
+${item.criterio || "-"}`;
 
 };
 
-area.appendChild(div);
+lista.appendChild(div);
 
 });
-
-/* INICIA CÂMERA AUTOMATICAMENTE */
 
 async function iniciarCamera(){
 
 try{
 
 const stream =
-await navigator.mediaDevices.getUserMedia({
+await navigator.mediaDevices
+.getUserMedia({
 
 video:{
 facingMode:"environment"
@@ -513,13 +514,14 @@ audio:false
 
 document.getElementById(
 "camera"
-).srcObject = stream;
+).srcObject =
+stream;
 
 }
 catch(error){
 
 alert(
-"Não foi possível acessar a câmera."
+"Falha ao acessar a câmera."
 );
 
 }
@@ -531,16 +533,14 @@ window.addEventListener(
 iniciarCamera
 );
 
-/* CONTROLES CAD */
-
 function atualizarCAD(){
 
-const opacity =
+const opacidade =
 document.getElementById(
 "opacity"
 ).value;
 
-const scale =
+const escala =
 document.getElementById(
 "scale"
 ).value;
@@ -556,7 +556,7 @@ document.getElementById(
 ).value;
 
 modelo.style.opacity =
-opacity / 100;
+opacidade / 100;
 
 modelo.style.left =
 `calc(50% + ${x}px)`;
@@ -565,21 +565,37 @@ modelo.style.top =
 `calc(50% + ${y}px)`;
 
 modelo.style.transform =
-`translate(-50%,-50%) scale(${scale/100})`;
+`translate(-50%,-50%) scale(${escala/100})`;
 
 }
 
-document.getElementById("opacity")
-.addEventListener("input",atualizarCAD);
+document
+.getElementById("opacity")
+.addEventListener(
+"input",
+atualizarCAD
+);
 
-document.getElementById("scale")
-.addEventListener("input",atualizarCAD);
+document
+.getElementById("scale")
+.addEventListener(
+"input",
+atualizarCAD
+);
 
-document.getElementById("posx")
-.addEventListener("input",atualizarCAD);
+document
+.getElementById("posx")
+.addEventListener(
+"input",
+atualizarCAD
+);
 
-document.getElementById("posy")
-.addEventListener("input",atualizarCAD);
+document
+.getElementById("posy")
+.addEventListener(
+"input",
+atualizarCAD
+);
 
 </script>
 
