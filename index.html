@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>InspectAR</title>
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:'Segoe UI',sans-serif;
+}
+
+body{
+background:#0b1220;
+color:white;
+min-height:100vh;
+}
+
+.header{
+padding:30px 20px;
+text-align:center;
+background:#111827;
+border-bottom:1px solid #1f2937;
+}
+
+.header h1{
+font-size:36px;
+margin-bottom:8px;
+}
+
+.header p{
+color:#94a3b8;
+}
+
+.container{
+max-width:1000px;
+margin:auto;
+padding:30px 20px;
+}
+
+.stats{
+
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+gap:20px;
+
+margin-bottom:30px;
+
+}
+
+.stat-card{
+
+background:#111827;
+
+border:1px solid #1f2937;
+
+padding:25px;
+
+border-radius:16px;
+
+}
+
+.stat-title{
+
+font-size:14px;
+
+color:#94a3b8;
+
+margin-bottom:10px;
+
+}
+
+.stat-value{
+
+font-size:36px;
+
+font-weight:bold;
+
+}
+
+.menu{
+
+display:grid;
+
+grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+
+gap:20px;
+
+}
+
+.menu-card{
+
+background:#111827;
+
+border:1px solid #1f2937;
+
+border-radius:16px;
+
+padding:25px;
+
+text-decoration:none;
+
+color:white;
+
+transition:0.2s;
+
+display:block;
+
+}
+
+.menu-card:hover{
+
+transform:translateY(-3px);
+
+border-color:#2563eb;
+
+}
+
+.icone{
+
+font-size:40px;
+
+margin-bottom:15px;
+
+}
+
+.titulo{
+
+font-size:20px;
+
+font-weight:600;
+
+margin-bottom:8px;
+
+}
+
+.descricao{
+
+color:#94a3b8;
+
+line-height:22px;
+
+}
+
+.footer{
+
+text-align:center;
+
+padding:20px;
+
+color:#64748b;
+
+font-size:13px;
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="header">
+
+<h1>InspectAR</h1>
+
+<p>
+Inspeção Assistida por Realidade Aumentada
+</p>
+
+</div>
+
+<div class="container">
+
+<div class="stats">
+
+<div class="stat-card">
+
+<div class="stat-title">
+MODELOS CADASTRADOS
+</div>
+
+<div
+id="totalModelos"
+class="stat-value">
+
+0
+
+</div>
+
+</div>
+
+<div class="stat-card">
+
+<div class="stat-title">
+CARACTERÍSTICAS
+</div>
+
+<div
+id="totalCaracteristicas"
+class="stat-value">
+
+0
+
+</div>
+
+</div>
+
+</div>
+
+<div class="menu">
+
+<a
+href="/cadastro.html"
+class="menu-card">
+
+<div class="icone">
+📦
+</div>
+
+<div class="titulo">
+Cadastros
+</div>
+
+<div class="descricao">
+
+Modelos, características
+e dados de inspeção.
+
+</div>
+
+</a>
+
+<a
+href="/viewer.html"
+class="menu-card">
+
+<div class="icone">
+🔍
+</div>
+
+<div class="titulo">
+Inspecionar
+</div>
+
+<div class="descricao">
+
+Selecionar peça e iniciar
+a inspeção em AR.
+
+</div>
+
+</a>
+
+</div>
+
+</div>
+
+<div class="footer">
+
+InspectAR V1
+
+</div>
+
+<script>
+
+const modelos =
+JSON.parse(
+localStorage.getItem("modelos")
+|| "[]"
+);
+
+const caracteristicas =
+JSON.parse(
+localStorage.getItem("caracteristicas")
+|| "[]"
+);
+
+document.getElementById(
+"totalModelos"
+).innerHTML =
+modelos.length;
+
+document.getElementById(
+"totalCaracteristicas"
+).innerHTML =
+caracteristicas.length;
+
+</script>
+
+</body>
+
+</html>
