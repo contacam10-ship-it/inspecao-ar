@@ -8,6 +8,10 @@
 
 <title>InspectAR - Cadastros</title>
 
+<script type="module"
+src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js">
+</script>
+
 <style>
 
 *{
@@ -29,6 +33,7 @@ padding:20px;
 display:flex;
 justify-content:space-between;
 align-items:center;
+border-bottom:1px solid #1f2937;
 }
 
 .logo{
@@ -36,62 +41,42 @@ font-size:24px;
 font-weight:700;
 }
 
-.btn{
+.btn-home{
 background:#2563eb;
-color:white;
+width:48px;
+height:48px;
+display:flex;
+align-items:center;
+justify-content:center;
+border-radius:12px;
 text-decoration:none;
-padding:12px 18px;
-border-radius:10px;
-font-weight:600;
+color:white;
+font-size:22px;
 }
 
 .container{
-max-width:1200px;
+max-width:1400px;
 margin:auto;
 padding:20px;
 }
 
-.tabs{
-display:flex;
-gap:10px;
-margin-bottom:20px;
-flex-wrap:wrap;
-}
-
-.tab{
-
-background:#111827;
-border:1px solid #1f2937;
-color:white;
-padding:12px 20px;
-border-radius:10px;
-cursor:pointer;
-
-}
-
-.tab.active{
-background:#2563eb;
-}
-
-.content{
-display:none;
-}
-
-.content.active{
-display:block;
-}
-
 .layout{
+
 display:grid;
-grid-template-columns:350px 1fr;
+grid-template-columns:280px 1fr;
+
 gap:20px;
+
 }
 
 .card{
 
 background:#111827;
+
 border:1px solid #1f2937;
+
 border-radius:16px;
+
 padding:20px;
 
 }
@@ -100,9 +85,85 @@ padding:20px;
 margin-bottom:15px;
 }
 
+.lista-pns{
+display:flex;
+flex-direction:column;
+gap:10px;
+}
+
+.pn-btn{
+
+width:100%;
+padding:14px;
+
+background:#1f2937;
+
+border:none;
+
+border-radius:10px;
+
+text-align:left;
+
+color:white;
+
+cursor:pointer;
+
+font-weight:600;
+
+}
+
+.pn-btn:hover{
+background:#2563eb;
+}
+
+.acoes{
+display:flex;
+gap:10px;
+margin-bottom:20px;
+flex-wrap:wrap;
+}
+
+.btn{
+
+background:#2563eb;
+
+color:white;
+
+border:none;
+
+padding:12px 16px;
+
+border-radius:10px;
+
+cursor:pointer;
+
+}
+
+.btn-danger{
+background:#dc2626;
+}
+
+.form{
+
+display:none;
+
+background:#1f2937;
+
+padding:15px;
+
+border-radius:12px;
+
+margin-bottom:20px;
+
+}
+
+.form.active{
+display:block;
+}
+
 label{
 display:block;
-margin-top:12px;
+margin-top:10px;
 margin-bottom:6px;
 }
 
@@ -114,20 +175,18 @@ width:100%;
 padding:12px;
 
 border:none;
+
 border-radius:10px;
 
 }
 
 textarea{
-height:100px;
-resize:vertical;
+height:90px;
 }
 
 .salvar{
 
-margin-top:20px;
-
-width:100%;
+margin-top:15px;
 
 background:#16a34a;
 
@@ -135,21 +194,66 @@ color:white;
 
 border:none;
 
-padding:14px;
+padding:12px;
 
 border-radius:10px;
 
-font-weight:bold;
-
 cursor:pointer;
+
+width:100%;
+
+font-weight:bold;
 
 }
 
-.lista-item{
+.detalhes{
+
+display:grid;
+
+grid-template-columns:1fr 320px;
+
+gap:20px;
+
+}
+
+.dados{
 
 background:#1f2937;
 
 padding:15px;
+
+border-radius:12px;
+
+}
+
+.info{
+
+margin-bottom:12px;
+
+}
+
+.titulo-info{
+font-size:12px;
+color:#94a3b8;
+}
+
+.valor-info{
+font-size:16px;
+font-weight:600;
+}
+
+model-viewer{
+width:100%;
+height:300px;
+background:#0f172a;
+border-radius:12px;
+}
+
+.caracteristica{
+
+background:#1f2937;
+
+padding:12px;
 
 border-radius:10px;
 
@@ -157,45 +261,13 @@ margin-bottom:10px;
 
 }
 
-.excluir{
-
-margin-top:10px;
-
-background:#dc2626;
-
-border:none;
-
-color:white;
-
-padding:10px 14px;
-
-border-radius:8px;
-
-cursor:pointer;
-
-}
-
-.info{
-
-margin-bottom:15px;
-
-color:#cbd5e1;
-
-}
-
-.grid{
-
-display:grid;
-
-grid-template-columns:1fr 1fr;
-
-gap:10px;
-
-}
-
-@media(max-width:900px){
+@media(max-width:1000px){
 
 .layout{
+grid-template-columns:1fr;
+}
+
+.detalhes{
 grid-template-columns:1fr;
 }
 
@@ -213,63 +285,70 @@ grid-template-columns:1fr;
 InspectAR
 </div>
 
-<a href="/" class="btn">
-← Dashboard
+<a href="/" class="btn-home">
+🏠
 </a>
 
 </div>
 
 <div class="container">
 
-<div class="tabs">
+<div class="layout">
+
+<!-- LISTA DE PNS -->
+
+<div class="card">
+
+<h2>PNs Cadastrados</h2>
+
+<div class="acoes">
 
 <button
-class="tab active"
-onclick="abrirAba('modelos')">
+class="btn"
+onclick="abrirNovoModelo()">
 
-📦 Modelos
++ Modelo
 
 </button>
 
 <button
-class="tab"
-onclick="abrirAba('caracteristicas')">
+class="btn"
+onclick="abrirNovaCaracteristica()">
 
-📋 Características
++ Característica
 
 </button>
 
 </div>
 
-<!-- MODELOS -->
+<div
+id="listaPns"
+class="lista-pns">
+
+</div>
+
+</div>
+
+<!-- DETALHES -->
+
+<div>
+
+<!-- FORM MODELO -->
 
 <div
-id="modelos"
-class="content active">
-
-<div class="layout">
-
-<div class="card">
+id="formModelo"
+class="form">
 
 <h2>Novo Modelo</h2>
 
 <label>PN</label>
-
-<input
-id="pnModelo"
-placeholder="86699800">
+<input id="pn">
 
 <label>Descrição</label>
-
-<input
-id="descricaoModelo"
-placeholder="Pino de Fixação">
+<input id="descricao">
 
 <label>Arquivo GLB</label>
-
-<input
-id="arquivoModelo"
-placeholder="86699800_prt.glb">
+<input id="arquivo">
 
 <button
 class="salvar"
@@ -281,53 +360,23 @@ Salvar Modelo
 
 </div>
 
-<div class="card">
-
-<h2>Modelos Cadastrados</h2>
+<!-- FORM CARACTERÍSTICA -->
 
 <div
-id="totalModelos"
-class="info">
-
-</div>
-
-<div id="listaModelos">
-
-</div>
-
-</div>
-
-</div>
-
-</div>
-
-<!-- CARACTERISTICAS -->
-
-<div
-id="caracteristicas"
-class="content">
-
-<div class="layout">
-
-<div class="card">
+id="formCaracteristica"
+class="form">
 
 <h2>Nova Característica</h2>
 
 <label>PN</label>
-
-<input
-id="pnCaracteristica"
-placeholder="86699800">
+<input id="pnCaracteristica">
 
 <label>Característica</label>
-
-<input
-id="nomeCaracteristica"
-placeholder="Furo Principal">
+<input id="caracteristica">
 
 <label>Tipo</label>
 
-<select id="tipoCaracteristica">
+<select id="tipo">
 
 <option>FURO</option>
 <option>COMPONENTE</option>
@@ -335,44 +384,11 @@ placeholder="Furo Principal">
 
 </select>
 
-<div class="grid">
-
-<div>
-
-<label>X</label>
-
-<input
-id="posx"
-type="number"
-value="0">
-
-</div>
-
-<div>
-
-<label>Y</label>
-
-<input
-id="posy"
-type="number"
-value="0">
-
-</div>
-
-</div>
-
 <label>Tolerância</label>
-
-<input
-id="tolerancia"
-type="number"
-step="0.01"
-value="0.20">
+<input id="tolerancia">
 
 <label>Critério</label>
-
-<textarea
-id="criterio"></textarea>
+<textarea id="criterio"></textarea>
 
 <button
 class="salvar"
@@ -386,15 +402,81 @@ Salvar Característica
 
 <div class="card">
 
-<h2>Características Cadastradas</h2>
+<h2>Detalhes</h2>
+
+<div class="detalhes">
+
+<div>
+
+<div class="dados">
+
+<div class="info">
+
+<div class="titulo-info">
+PN
+</div>
 
 <div
-id="totalCaracteristicas"
-class="info">
+id="pnAtual"
+class="valor-info">
+
+Selecione um PN
 
 </div>
 
-<div id="listaCaracteristicas">
+</div>
+
+<div class="info">
+
+<div class="titulo-info">
+Descrição
+</div>
+
+<div
+id="descricaoAtual"
+class="valor-info">
+
+-
+
+</div>
+
+</div>
+
+<button
+class="btn-danger btn"
+onclick="excluirModelo()">
+
+🗑 Excluir Modelo
+
+</button>
+
+</div>
+
+<br>
+
+<h3>Características</h3>
+
+<br>
+
+<div
+id="listaCaracteristicas">
+
+Nenhuma característica.
+
+</div>
+
+</div>
+
+<div>
+
+<model-viewer
+id="modeloViewer"
+camera-controls
+auto-rotate>
+
+</model-viewer>
+
+</div>
 
 </div>
 
@@ -408,27 +490,7 @@ class="info">
 
 <script>
 
-function abrirAba(nome){
-
-document
-.querySelectorAll(".content")
-.forEach(el=>{
-el.classList.remove("active");
-});
-
-document
-.querySelectorAll(".tab")
-.forEach(el=>{
-el.classList.remove("active");
-});
-
-document
-.getElementById(nome)
-.classList.add("active");
-
-event.target.classList.add("active");
-
-}
+let modeloSelecionado = null;
 
 function carregarModelos(){
 
@@ -438,144 +500,62 @@ localStorage.getItem("modelos")
 || "[]"
 );
 
-document.getElementById(
-"totalModelos"
-).innerHTML =
-"Total: " + modelos.length;
-
 const area =
-document.getElementById(
-"listaModelos"
-);
+document.getElementById("listaPns");
 
 area.innerHTML = "";
 
-modelos.forEach((modelo,index)=>{
+modelos.forEach(modelo=>{
 
-area.innerHTML += `
+const btn =
+document.createElement("button");
 
-<div class="lista-item">
+btn.className =
+"pn-btn";
 
-<b>PN:</b> ${modelo.pn}
+btn.innerHTML =
+modelo.pn;
 
-<br><br>
+btn.onclick = function(){
 
-<b>Descrição:</b>
-${modelo.descricao}
+modeloSelecionado =
+modelo;
 
-<br><br>
+document.getElementById(
+"pnAtual"
+).innerHTML =
+modelo.pn;
 
-<b>Arquivo:</b>
-${modelo.arquivo}
+document.getElementById(
+"descricaoAtual"
+).innerHTML =
+modelo.descricao;
 
-<br>
+document.getElementById(
+"modeloViewer"
+).src =
+"/modelos/" + modelo.arquivo;
 
-<button
-class="excluir"
-onclick="excluirModelo(${index})">
+carregarCaracteristicasPn(
+modelo.pn
+);
 
-🗑 Excluir
+};
 
-</button>
-
-</div>
-
-`;
+area.appendChild(btn);
 
 });
 
 }
 
-function salvarModelo(){
-
-const pn =
-document.getElementById("pnModelo").value.trim();
-
-const descricao =
-document.getElementById("descricaoModelo").value.trim();
-
-const arquivo =
-document.getElementById("arquivoModelo").value.trim();
-
-if(!pn || !arquivo){
-
-alert(
-"Preencha PN e Arquivo."
-);
-
-return;
-
-}
-
-const modelos =
-JSON.parse(
-localStorage.getItem("modelos")
-|| "[]"
-);
-
-const existe =
-modelos.find(
-m => m.pn === pn
-);
-
-if(existe){
-
-alert(
-"PN já cadastrado."
-);
-
-return;
-
-}
-
-modelos.push({
-
-pn,
-descricao,
-arquivo
-
-});
-
-localStorage.setItem(
-"modelos",
-JSON.stringify(modelos)
-);
-
-carregarModelos();
-
-}
-
-function excluirModelo(index){
-
-const modelos =
-JSON.parse(
-localStorage.getItem("modelos")
-|| "[]"
-);
-
-modelos.splice(index,1);
-
-localStorage.setItem(
-"modelos",
-JSON.stringify(modelos)
-);
-
-carregarModelos();
-
-}
-
-function carregarCaracteristicas(){
+function carregarCaracteristicasPn(pn){
 
 const lista =
 JSON.parse(
-localStorage.getItem("caracteristicas")
-|| "[]"
+localStorage.getItem(
+"caracteristicas"
+) || "[]"
 );
-
-document.getElementById(
-"totalCaracteristicas"
-).innerHTML =
-"Total: " + lista.length;
 
 const area =
 document.getElementById(
@@ -584,53 +564,19 @@ document.getElementById(
 
 area.innerHTML = "";
 
-lista.forEach((item,index)=>{
+lista
+.filter(x=>x.pn===pn)
+.forEach(item=>{
 
 area.innerHTML += `
 
-<div class="lista-item">
+<div class="caracteristica">
 
-<b>PN:</b>
-${item.pn}
-
-<br><br>
-
-<b>Característica:</b>
-${item.caracteristica}
+<b>${item.caracteristica}</b>
 
 <br>
 
-<b>Tipo:</b>
 ${item.tipo}
-
-<br>
-
-<b>X:</b>
-${item.posx}
-
-<br>
-
-<b>Y:</b>
-${item.posy}
-
-<br>
-
-<b>Tolerância:</b>
-±${item.tolerancia}
-
-<br><br>
-
-${item.criterio}
-
-<br>
-
-<button
-class="excluir"
-onclick="excluirCaracteristica(${index})">
-
-🗑 Excluir
-
-</button>
 
 </div>
 
@@ -640,30 +586,78 @@ onclick="excluirCaracteristica(${index})">
 
 }
 
+function abrirNovoModelo(){
+
+document.getElementById(
+"formModelo"
+).classList.add("active");
+
+document.getElementById(
+"formCaracteristica"
+).classList.remove("active");
+
+}
+
+function abrirNovaCaracteristica(){
+
+document.getElementById(
+"formCaracteristica"
+).classList.add("active");
+
+document.getElementById(
+"formModelo"
+).classList.remove("active");
+
+}
+
+function salvarModelo(){
+
+const modelos =
+JSON.parse(
+localStorage.getItem("modelos")
+|| "[]"
+);
+
+modelos.push({
+
+pn:
+document.getElementById("pn").value,
+
+descricao:
+document.getElementById("descricao").value,
+
+arquivo:
+document.getElementById("arquivo").value
+
+});
+
+localStorage.setItem(
+"modelos",
+JSON.stringify(modelos)
+);
+
+carregarModelos();
+
+}
+
 function salvarCaracteristica(){
 
-const caracteristicas =
+const lista =
 JSON.parse(
 localStorage.getItem("caracteristicas")
 || "[]"
 );
 
-caracteristicas.push({
+lista.push({
 
 pn:
 document.getElementById("pnCaracteristica").value,
 
 caracteristica:
-document.getElementById("nomeCaracteristica").value,
+document.getElementById("caracteristica").value,
 
 tipo:
-document.getElementById("tipoCaracteristica").value,
-
-posx:
-document.getElementById("posx").value,
-
-posy:
-document.getElementById("posy").value,
+document.getElementById("tipo").value,
 
 tolerancia:
 document.getElementById("tolerancia").value,
@@ -675,34 +669,38 @@ document.getElementById("criterio").value
 
 localStorage.setItem(
 "caracteristicas",
-JSON.stringify(caracteristicas)
+JSON.stringify(lista)
 );
-
-carregarCaracteristicas();
 
 }
 
-function excluirCaracteristica(index){
+function excluirModelo(){
 
-const caracteristicas =
+if(!modeloSelecionado){
+return;
+}
+
+const modelos =
 JSON.parse(
-localStorage.getItem("caracteristicas")
+localStorage.getItem("modelos")
 || "[]"
 );
 
-caracteristicas.splice(index,1);
-
-localStorage.setItem(
-"caracteristicas",
-JSON.stringify(caracteristicas)
+const novos =
+modelos.filter(
+m => m.pn !== modeloSelecionado.pn
 );
 
-carregarCaracteristicas();
+localStorage.setItem(
+"modelos",
+JSON.stringify(novos)
+);
+
+location.reload();
 
 }
 
 carregarModelos();
-carregarCaracteristicas();
 
 </script>
 
