@@ -1,0 +1,9 @@
+{
+  "cleanUrls": true,
+  "trailingSlash": false,
+  "rewrites": [
+    { "source": "/ar-viewer", "destination": "/ar-viewer.html" },
+    { "source": "/viewer", "destination": "/viewer.html" },
+    { "source": "/cadastro", "destination": "/cadastro.html" }
+  ]
+}
