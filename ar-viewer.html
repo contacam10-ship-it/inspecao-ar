@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>InspectAR - Inspeção AR</title>
+
+<script type="module"
+src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js">
+</script>
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:'Segoe UI',sans-serif;
+}
+
+body{
+background:#0b1220;
+color:white;
+height:100vh;
+overflow:hidden;
+}
+
+.header{
+height:70px;
+background:#111827;
+border-bottom:1px solid #1f2937;
+
+display:flex;
+align-items:center;
+justify-content:space-between;
+
+padding:0 20px;
+}
+
+.logo{
+font-size:22px;
+font-weight:700;
+}
+
+.home{
+width:48px;
+height:48px;
+
+display:flex;
+align-items:center;
+justify-content:center;
+
+background:#2563eb;
+
+color:white;
+text-decoration:none;
+
+border-radius:12px;
+
+font-size:22px;
+}
+
+.main{
+
+display:grid;
+grid-template-columns:1fr 320px;
+
+height:calc(100vh - 70px);
+
+}
+
+.ar-area{
+
+position:relative;
+
+background:black;
+
+overflow:hidden;
+
+}
+
+#camera{
+
+position:absolute;
+inset:0;
+
+width:100%;
+height:100%;
+
+object-fit:cover;
+
+z-index:1;
+
+}
+
+#modelo{
+
+position:absolute;
+
+top:50%;
+left:50%;
+
+width:100%;
+height:100%;
+
+transform:translate(-50%,-50%);
+
+background:transparent;
+
+z-index:2;
+
+pointer-events:none;
+
+opacity:.8;
+
+}
+
+.sidebar{
+
+background:#111827;
+
+padding:15px;
+
+overflow-y:auto;
+
+border-left:1px solid #1f2937;
+
+}
+
+.card{
+
+background:#1f2937;
+
+padding:15px;
+
+border-radius:12px;
+
+margin-bottom:15px;
+
+}
+
+.card-title{
+
+font-size:12px;
+
+color:#94a3b8;
+
+margin-bottom:10px;
+
+text-transform:uppercase;
+
+}
+
+.pn{
+
+font-size:18px;
+font-weight:600;
+
+}
+
+.feature{
+
+background:#0f172a;
+
+padding:10px;
+
+border-radius:10px;
+
+margin-bottom:8px;
+
+cursor:pointer;
+
+transition:.2s;
+
+}
+
+.feature:hover{
+background:#2563eb;
+}
+
+.details{
+line-height:24px;
+font-size:14px;
+}
+
+.controls label{
+
+display:block;
+
+margin-top:12px;
+margin-bottom:5px;
+
+font-size:13px;
+
+}
+
+.controls input{
+width:100%;
+}
+
+.btn{
+
+width:100%;
+
+padding:14px;
+
+border:none;
+
+border-radius:10px;
+
+cursor:pointer;
+
+font-weight:bold;
+
+margin-top:10px;
+
+}
+
+.btn-aprovar{
+background:#16a34a;
+color:white;
+}
+
+.btn-rejeitar{
+background:#dc2626;
+color:white;
+}
+
+@media(max-width:1000px){
+
+body{
+overflow:auto;
+}
+
+.main{
+grid-template-columns:1fr;
+height:auto;
+}
+
+.ar-area{
+height:65vh;
+}
+
+.sidebar{
+border-left:none;
+border-top:1px solid #1f2937;
+}
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="header">
+
+<div class="logo">
+InspectAR
+</div>
+
+<a href="/" class="home">
+🏠
+</a>
+
+</div>
+
+<div class="main">
+
+<div class="ar-area">
+
+<video
+id="camera"
+autoplay
+playsinline
+muted>
+</video>
+
+<model-viewer
+id="modelo"
+camera-controls
+auto-rotate>
+</model-viewer>
+
+</div>
+
+<div class="sidebar">
+
+<div class="card">
+
+<div class="card-title">
+PEÇA EM INSPEÇÃO
+</div>
+
+<div
+id="pnAtual"
+class="pn">
+
+-
+
+</div>
+
+</div>
+
+<div class="card">
+
+<div class="card-title">
+CARACTERÍSTICAS
+
+</div>
+
+<div id="features">
+
+Sem características cadastradas.
+
+</div>
+
+</div>
+
+<div class="card">
+
+<div class="card-title">
+CRITÉRIO DE INSPEÇÃO
+</div>
+
+<div
+id="details"
+class="details">
+
+Selecione uma característica.
+
+</div>
+
+</div>
+
+<div class="card controls">
+
+<div class="card-title">
+
+ALINHAMENTO CAD
+
+</div>
+
+<label>Transparência</label>
+
+<input
+id="opacity"
+type="range"
+min="10"
+max="100"
+value="80">
+
+<label>Escala</label>
+
+<input
+id="scale"
+type="range"
+min="50"
+max="250"
+value="100">
+
+<label>Posição X</label>
+
+<input
+id="posx"
+type="range"
+min="-500"
+max="500"
+value="0">
+
+<label>Posição Y</label>
+
+<input
+id="posy"
+type="range"
+min="-500"
+max="500"
+value="0">
+
+<button class="btn btn-aprovar">
+✅ Aprovar
+</button>
+
+<button class="btn btn-rejeitar">
+❌ Rejeitar
+</button>
+
+</div>
+
+</div>
+
+</div>
+
+<script>
+
+const params =
+new URLSearchParams(
+window.location.search
+);
+
+const pn =
+params.get("pn");
+
+const arquivo =
+params.get("arquivo");
+
+document.getElementById(
+"pnAtual"
+).innerHTML =
+pn || "-";
+
+const modelo =
+document.getElementById(
+"modelo"
+);
+
+if(arquivo){
+
+modelo.src =
+"/modelos/" + arquivo;
+
+}
+
+/* CARREGA CARACTERÍSTICAS */
+
+const caracteristicas =
+JSON.parse(
+localStorage.getItem(
+"caracteristicas"
+) || "[]"
+);
+
+const area =
+document.getElementById(
+"features"
+);
+
+const details =
+document.getElementById(
+"details"
+);
+
+area.innerHTML = "";
+
+const lista =
+caracteristicas.filter(
+item => item.pn === pn
+);
+
+if(lista.length === 0){
+
+area.innerHTML =
+"Sem características cadastradas.";
+
+}
+
+lista.forEach(item=>{
+
+const div =
+document.createElement("div");
+
+div.className =
+"feature";
+
+div.innerHTML =
+item.caracteristica;
+
+div.onclick = function(){
+
+details.innerHTML = `
+
+<b>Tipo</b><br>
+${item.tipo || "-"}
+
+<br><br>
+
+<b>Tolerância</b><br>
+±${item.tolerancia || "-"}
+
+<br><br>
+
+<b>Critério</b><br>
+${item.criterio || "-"}
+
+`;
+
+};
+
+area.appendChild(div);
+
+});
+
+/* INICIA CÂMERA AUTOMATICAMENTE */
+
+async function iniciarCamera(){
+
+try{
+
+const stream =
+await navigator.mediaDevices.getUserMedia({
+
+video:{
+facingMode:"environment"
+},
+
+audio:false
+
+});
+
+document.getElementById(
+"camera"
+).srcObject = stream;
+
+}
+catch(error){
+
+alert(
+"Não foi possível acessar a câmera."
+);
+
+}
+
+}
+
+window.addEventListener(
+"load",
+iniciarCamera
+);
+
+/* CONTROLES CAD */
+
+function atualizarCAD(){
+
+const opacity =
+document.getElementById(
+"opacity"
+).value;
+
+const scale =
+document.getElementById(
+"scale"
+).value;
+
+const x =
+document.getElementById(
+"posx"
+).value;
+
+const y =
+document.getElementById(
+"posy"
+).value;
+
+modelo.style.opacity =
+opacity / 100;
+
+modelo.style.left =
+`calc(50% + ${x}px)`;
+
+modelo.style.top =
+`calc(50% + ${y}px)`;
+
+modelo.style.transform =
+`translate(-50%,-50%) scale(${scale/100})`;
+
+}
+
+document.getElementById("opacity")
+.addEventListener("input",atualizarCAD);
+
+document.getElementById("scale")
+.addEventListener("input",atualizarCAD);
+
+document.getElementById("posx")
+.addEventListener("input",atualizarCAD);
+
+document.getElementById("posy")
+.addEventListener("input",atualizarCAD);
+
+</script>
+
+</body>
+
+</html>
